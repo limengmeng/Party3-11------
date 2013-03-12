@@ -658,9 +658,10 @@
 
 - (void)slimeRefreshStartRefresh:(SRRefreshView *)refreshView
 {
+    flag=0;
     //====================获取数据================================
     if (segment==1) {
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00029?uuid=%@",userUUid];
+        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00029?uuid=%@&&from=1&&to=5",userUUid];
         NSLog(@"接口29网址:::%@",stringUrl);
         NSURL* url=[NSURL URLWithString:stringUrl];
         
@@ -673,7 +674,7 @@
         [request startAsynchronous];
     }
     if (segment==0) {
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00028?uuid=%@",userUUid];
+        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00028?uuid=%@&&from=1&&to=5",userUUid];
         NSLog(@"获取活动列表,接口28:%@",stringUrl);
         NSURL* url=[NSURL URLWithString:stringUrl];
         
