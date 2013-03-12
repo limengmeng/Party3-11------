@@ -166,19 +166,21 @@ int MessFlag=0;//判断是否需要重新加载消息页面
     if (MessFlag==0) {
         //重新加载消息
         NSLog(@"重新加载消息");
-        [friendbutton setSelected:YES];
-        [partybutton setSelected:NO];
+        [friendlist removeAllObjects];
+        [tbView reloadData];
+        [friendbutton setSelected:NO];
+        [partybutton setSelected:YES];
         [systembutton setSelected:NO];
-        choiceNumber=0;
+        choiceNumber=1;
         total=0;
         flag=0;
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/user/IF00016?uuid=%@&&type=friend",userUUid];
+        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00050?uuid=%@&&m_type=party",userUUid];
         NSURL* url=[NSURL URLWithString:stringUrl];
-        NSLog(@"好友消息：%@",url);
+        NSLog(@"派对消息：%@",url);
         NSLog(@"%@",stringUrl);
         ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
         [request setDelegate:self];
-        [request startAsynchronous];    
+        [request startAsynchronous];
     }
     MessFlag=0;
     
