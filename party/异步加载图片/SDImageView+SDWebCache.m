@@ -31,7 +31,7 @@
     [acview release];
     [acview startAnimating];
     self.image = placeholder;
-	NSLog(@"%@",url);
+	//NSLog(@"%@",url);
     if (url)
     {
         if ([[CustomObject sharedCustomObject] isExistImage:url]) {
