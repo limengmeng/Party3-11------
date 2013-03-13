@@ -100,6 +100,12 @@
     grayRC.selectedIndex=0;
     segment=0;
     flag=0;
+    
+    acview=[[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    acview.frame=CGRectMake(150, mainscreenhight/2.0, 20, 20);
+    [self.view addSubview:acview];
+    [acview release];
+    [acview startAnimating];
     //接口IF00028
     NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00028?uuid=%@&&from=1&&to=5",userUUid];
     NSLog(@"获取活动列表,接口28:%@",stringUrl);
@@ -159,6 +165,7 @@
         [self.addrarray addObjectsFromArray:[bizDic objectForKey:@"collects"]];
         NSLog(@"%@",self.addrarray);
     }
+    [acview stopAnimating];
     [tableview reloadData];
 }
 -(void)getUUidForthis

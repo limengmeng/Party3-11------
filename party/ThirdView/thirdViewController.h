@@ -16,6 +16,7 @@
 #import "DetailViewController.h"
 @interface thirdViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,ASIHTTPRequestDelegate,SRRefreshDelegate>
 {
+    UIActivityIndicatorView* acview;
     SVSegmentedControl *grayRC;
     UITableView* tableview;
     NSMutableArray* actsumarray;

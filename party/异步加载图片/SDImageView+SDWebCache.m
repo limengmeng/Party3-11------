@@ -26,7 +26,7 @@
     // Remove in progress downloader from queue
 	
     UIActivityIndicatorView* acview=[[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    acview.frame=CGRectMake(self.frame.size.width/2-20, self.frame.size.height/2-20, 40, 40);
+    acview.frame=CGRectMake(self.frame.size.width/2-10, self.frame.size.height/2-10, 20, 20);
     [self addSubview:acview];
     [acview release];
     [acview startAnimating];
