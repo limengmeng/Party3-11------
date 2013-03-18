@@ -47,6 +47,7 @@
 {
    
     [super viewDidLoad];
+    //========新浪登陆初始化=================
     tableV=[[UITableView alloc]initWithFrame:mainscreen style:UITableViewStyleGrouped];
     tableV.dataSource=self;
     tableV.delegate=self;
@@ -258,7 +259,8 @@
 }
 -(void)viewDidAppear:(BOOL)animated{
     [self getUUidForthis];
-    NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/user/IF00030?uuid=%@",self.userUUid];
+    NSString* str=[NSString stringWithFormat:@"mac/user/IF00030?uuid=%@",self.userUUid];
+    NSString *stringUrl=globalURL(str);
     
     NSURL* url=[NSURL URLWithString:stringUrl];
     ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
@@ -268,7 +270,6 @@
     [request setDefaultResponseEncoding:NSUTF8StringEncoding];
     [request setDidFailSelector:@selector(requestDidFailed:)];
     [request startAsynchronous];
-
     [super viewDidAppear:animated];
     //[self.tableV reloadData];
 }
@@ -281,19 +282,11 @@
 {
     if (btn.selected==NO) {
         btn.selected=YES;
+        _weiboSignIn = [[WeiboSignIn alloc] init];
+        _weiboSignIn.delegate = self;
         //button.userInteractionEnabled=NO;
         button.frame=CGRectMake(244, 10, 46, 28);
-        sinaWeibo = [[SinaWeibo alloc] initWithAppKey:kAppKey appSecret:kAppSecret appRedirectURI:kAppRedirectURI andDelegate:self];
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSDictionary *sinaweiboInfo = [defaults objectForKey:@"SinaWeiboAuthData"];
-        if ([sinaweiboInfo objectForKey:@"AccessTokenKey"] && [sinaweiboInfo objectForKey:@"ExpirationDateKey"] && [sinaweiboInfo objectForKey:@"UserIDKey"])
-        {
-            sinaWeibo.accessToken = [sinaweiboInfo objectForKey:@"AccessTokenKey"];
-            sinaWeibo.expirationDate = [sinaweiboInfo objectForKey:@"ExpirationDateKey"];
-            sinaWeibo.userID = [sinaweiboInfo objectForKey:@"UserIDKey"];
-        }
-        [sinaWeibo logIn];
-        sinaWeibo.delegate=self;
+        [_weiboSignIn signInOnViewController:self];
         
     }
     else{
@@ -342,76 +335,22 @@
     }
 }
 #pragma mark - SinaWeibo Delegate
-
-- (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
-{
-    sinaFlag=10;
-    NSLog(@"sinaweiboDidLogIn userID = %@ accesstoken = %@ expirationDate = %@ refresh_token = %@", sinaweibo.userID, sinaweibo.accessToken, sinaweibo.expirationDate,sinaweibo.refreshToken);
-    NSLog(@"1111111111111111111111111111");
-    //numberSum=[sinaWeibo.userID integerValue];
-    NSURL *url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/sina/SIF00001"];
-    ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
-    [rrequest setPostValue:sinaWeibo.userID forKey: @"suid"];
-    [rrequest setPostValue:self.userUUid forKey:@"uuid"];
-    [rrequest setDelegate:self];
-    [rrequest startAsynchronous];
-    //=================新浪微博登陆成功进入下个界面=======================================
-    //    SinaGetViewController *sinaGetView=[[SinaGetViewController alloc]init];
-    //    //[self.navigationController pushViewController:sinaGetView animated:YES];
-    //    [self.view addSubview:sinaGetView.view];
-    
-}
-
-- (void)sinaweiboDidLogOut:(SinaWeibo *)sinaweibo
-{
-    NSLog(@"sinaweiboDidLogOut");
-    
-    
-}
-
-- (void)sinaweiboLogInDidCancel:(SinaWeibo *)sinaweibo
-{
-    NSLog(@"sinaweiboLogInDidCancel");
-    [sinaweibo logOut];
-    //====================新浪微博登陆不成功返回==================================================
-    
-}
-
-- (void)sinaweibo:(SinaWeibo *)sinaweibo logInDidFailWithError:(NSError *)error
-{
-    NSLog(@"sinaweibo logInDidFailWithError %@", error);
-}
-
-- (void)sinaweibo:(SinaWeibo *)sinaweibo accessTokenInvalidOrExpired:(NSError *)error
-{
-    NSLog(@"sinaweiboAccessTokenInvalidOrExpired %@", error);
-    [self removeAuthData];
-}
-- (void)removeAuthData
-{
-    NSLog(@"removeAuthData");
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"SinaWeiboAuthData"];
-}
-#pragma mark - SinaWeiboRequest Delegate
-
-- (void)request:(SinaWeiboRequest *)request didFailWithError:(NSError *)error
-{
-    
-    
-}
-
-- (void)request:(SinaWeiboRequest *)request didFinishLoadingWithResult:(id)result
-{
-    
-    if([request.url hasSuffix:@"friendships/friends/bilateral.json"])
-    {
-        
+- (void)finishedWithAuth:(WeiboAuthentication *)auth error:(NSError *)error {
+    if (error) {
+        NSLog(@"failed to auth: %@", error);
     }
-    if ([request.url hasSuffix:@"users/show.json"])
-    {
-       
-       
-        
+    else {
+        NSLog(@"Success to auth: %@", auth.userId);
+        sinaFlag=10;
+        NSString* str=@"mac/sina/SIF00001";
+        NSString* strURL=globalURL(str);
+        NSURL *url=[NSURL URLWithString:strURL];
+        ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
+        [rrequest setPostValue:auth.userId forKey: @"suid"];
+        [rrequest setPostValue:self.userUUid forKey:@"uuid"];
+        [rrequest setDelegate:self];
+        [rrequest startAsynchronous];
+        [[WeiboAccounts shared]addAccountWithAuthentication:auth];
     }
 }
 -(void)dealloc

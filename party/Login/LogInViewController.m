@@ -45,6 +45,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //============新浪初始化===========================
+    _weiboSignIn = [[WeiboSignIn alloc] init];
+    _weiboSignIn.delegate = self;
 	// Do any additional setup after loading the view, typically from a nib.
     //********************************日期选择器*******************************************
     datepicker=[[UIDatePicker alloc]initWithFrame:CGRectMake(0, 0, 0, 0)];
@@ -161,8 +164,9 @@
 -(void)loadDate{
     numberSum=0;
 
-    NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/servlet/reg"];
-    
+    NSString* str=@"servlet/reg";
+    NSString* strURL=globalURL(str);
+    NSURL* url=[NSURL URLWithString:strURL];
     ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
     
     //NSLog(@"mail==%@",self.mail);
@@ -221,7 +225,7 @@
         //=========将用户的UUid放入本地=============================================
         NSArray *pathsG=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         //NSLog(@"Get document path: %@",[pathsG objectAtIndex:0]);
-        NSString *fileNameG=[[paths objectAtIndex:0] stringByAppendingPathComponent:@"Guo.txt"];
+        NSString *fileNameG=[[pathsG objectAtIndex:0] stringByAppendingPathComponent:@"Guo.txt"];
         NSMutableArray *uuidMutablearrayG=[NSMutableArray arrayWithObjects:self.mail, self.mail_pass,nil];
         //NSLog(@"sadafdasfas%@",uuidMutablearrayG);
         [uuidMutablearrayG writeToFile:fileNameG atomically:YES];
@@ -237,95 +241,94 @@
         
     }
     else if (numberSum==1) {
-        [sinaWeibo logOut];
         NSData* response=[request responseData];
         //NSLog(@"%@",response);
         NSError* error;
-        NSDictionary* bizDic=[NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableLeaves error:&error];
-        //NSLog(@"wwwwwwwwwwwwwwqqqqqqqqqqtttttttttt%@",bizDic);
-        NSDictionary *dict=[bizDic objectForKey:@"sina_user"];
-        NSURL *url=[NSURL URLWithString:[dict objectForKey:@"avatarLarge"]];
+        NSDictionary* dict=[NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableLeaves error:&error];
+        NSLog(@"wwwwwwwwwwwwwwqqqqqqqqqqtttttttttt%@",dict);
+        //NSArray *dictArray=[bizDic objectForKey:@"users"];
+        //NSDictionary *dict=[dictArray objectAtIndex:0];
+        NSURL *url=[NSURL URLWithString:[dict objectForKey:@"avatar_large"]];
         UIImage *image=[UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-        //NSLog(@"输出照片：%@",image);
+        NSLog(@"输出照片：%@",image);
         NSString *sex=[dict objectForKey:@"gender"];
-        //NSLog(@"输出性别：%@",sex);
+        NSLog(@"输出性别：%@",sex);
         NSString *stringName=[dict objectForKey:@"name"];
-        //NSLog(@"输出用户名：%@",stringName);
-        NSString *stringUuid=[bizDic objectForKey:@"uuid"];
-        
-        NSString *stringExist=[bizDic objectForKey:@"status"];
-        //NSLog(@"用户是否存在%@",stringExist);
-        if ([stringExist intValue]==200) {
-            infodoneView=[[write_done alloc]initWithFrame:CGRectMake(0, 0, 320*mainwith, 460*mainhight)];
-            infodoneView.backgroundColor=[UIColor grayColor];
-            infodoneView.imgView.image=image;
-            infodoneView.field1.text=stringName;
-            infodoneView.field1.delegate=self;
-            infodoneView.field2.delegate=self;
-            infodoneView.field2.inputView=datepicker;
-            infodoneView.field2.inputAccessoryView=dateToolbar;
-            [infodoneView.button1 addTarget:self action:@selector(male) forControlEvents:UIControlEventTouchUpInside];
-            [infodoneView.button2 addTarget:self action:@selector(female) forControlEvents:UIControlEventTouchUpInside];
-
-            [infodoneView.button3 addTarget:self action:@selector(doneWon) forControlEvents:UIControlEventTouchUpInside];
-            [self.view addSubview:infodoneView];
-            //=========将用户的UUid放入本地=============================================
-            NSArray *paths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            //NSLog(@"Get document path: %@",[paths objectAtIndex:0]);
-            NSString *fileName=[[paths objectAtIndex:0] stringByAppendingPathComponent:@"myFile.txt"];
-            NSString *content=stringUuid;
-            //NSLog(@"wosds%@",content);
-            NSMutableArray *uuidMutablearray=[NSMutableArray arrayWithObject:content];
-            //NSLog(@"sadafdasfas%@",uuidMutablearray);
-            [uuidMutablearray writeToFile:fileName atomically:YES];
-            //=====================================
-            NSArray *pathsG=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            //NSLog(@"Get document path: %@",[pathsG objectAtIndex:0]);
-            NSString *fileNameG=[[pathsG objectAtIndex:0] stringByAppendingPathComponent:@"Guo.txt"];
-            NSMutableArray *uuidMutablearrayG=[NSMutableArray arrayWithObjects:@"新浪用户", @"新浪密码",nil];
-            //NSLog(@"sadafdasfas%@",uuidMutablearrayG);
-            [uuidMutablearrayG writeToFile:fileNameG atomically:YES];
-        }
-        else if ([stringExist intValue]==300) {
-            UIAlertView *soundAlert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"用户存在" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-            [soundAlert show];
-            [soundAlert release];
-            //=========将用户的UUid放入本地=============================================
-            NSArray *paths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            //NSLog(@"Get document path: %@",[paths objectAtIndex:0]);
-            NSString *fileName=[[paths objectAtIndex:0] stringByAppendingPathComponent:@"myFile.txt"];
-            NSString *content=stringUuid;
-            //NSLog(@"wosds%@",content);
-            NSMutableArray *uuidMutablearray=[NSMutableArray arrayWithObject:content];
-            //NSLog(@"sadafdasfas%@",uuidMutablearray);
-            [uuidMutablearray writeToFile:fileName atomically:YES];
-            //=====================================
-            NSArray *pathsG=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            //NSLog(@"Get document path: %@",[pathsG objectAtIndex:0]);
-            NSString *fileNameG=[[pathsG objectAtIndex:0] stringByAppendingPathComponent:@"Guo.txt"];
-            NSMutableArray *uuidMutablearrayG=[NSMutableArray arrayWithObjects:@"新浪用户", @"新浪密码",nil];
-            //NSLog(@"sadafdasfas%@",uuidMutablearrayG);
-            [uuidMutablearrayG writeToFile:fileNameG atomically:YES];
-            [self.view removeFromSuperview];
-        }else{
-            //=========将用户的UUid放入本地=============================================
-            NSArray *paths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            //NSLog(@"Get document path: %@",[paths objectAtIndex:0]);
-            NSString *fileName=[[paths objectAtIndex:0] stringByAppendingPathComponent:@"myFile.txt"];
-            NSString *content=stringUuid;
-            //NSLog(@"wosds%@",content);
-            NSMutableArray *uuidMutablearray=[NSMutableArray arrayWithObject:content];
-            //NSLog(@"sadafdasfas%@",uuidMutablearray);
-            [uuidMutablearray writeToFile:fileName atomically:YES];
-            
-            //=====================================
-            NSArray *pathsG=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            //NSLog(@"Get document path: %@",[pathsG objectAtIndex:0]);
-            NSString *fileNameG=[[pathsG objectAtIndex:0] stringByAppendingPathComponent:@"Guo.txt"];
-            NSMutableArray *uuidMutablearrayG=[NSMutableArray arrayWithObjects:@"新浪用户名", @"新浪密码",nil];
-            //NSLog(@"sadafdasfas%@",uuidMutablearrayG);
-            [uuidMutablearrayG writeToFile:fileNameG atomically:YES];
-        }
+        NSLog(@"输出用户名：%@",stringName);
+        NSString *stringUuid=[dict objectForKey:@"id"];
+        NSString *stringExist=[dict objectForKey:@"status"];
+        NSLog(@"用户是否存在%@",stringExist);
+//        if ([stringExist intValue]==200) {
+//            infodoneView=[[write_done alloc]initWithFrame:CGRectMake(0, 0, 320*mainwith, 460*mainhight)];
+//            infodoneView.backgroundColor=[UIColor grayColor];
+//            infodoneView.imgView.image=image;
+//            infodoneView.field1.text=stringName;
+//            infodoneView.field1.delegate=self;
+//            infodoneView.field2.delegate=self;
+//            infodoneView.field2.inputView=datepicker;
+//            infodoneView.field2.inputAccessoryView=dateToolbar;
+//            [infodoneView.button1 addTarget:self action:@selector(male) forControlEvents:UIControlEventTouchUpInside];
+//            [infodoneView.button2 addTarget:self action:@selector(female) forControlEvents:UIControlEventTouchUpInside];
+//
+//            [infodoneView.button3 addTarget:self action:@selector(doneWon) forControlEvents:UIControlEventTouchUpInside];
+//            [self.view addSubview:infodoneView];
+//            //=========将用户的UUid放入本地=============================================
+//            NSArray *paths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//            //NSLog(@"Get document path: %@",[paths objectAtIndex:0]);
+//            NSString *fileName=[[paths objectAtIndex:0] stringByAppendingPathComponent:@"myFile.txt"];
+//            NSString *content=stringUuid;
+//            //NSLog(@"wosds%@",content);
+//            NSMutableArray *uuidMutablearray=[NSMutableArray arrayWithObject:content];
+//            //NSLog(@"sadafdasfas%@",uuidMutablearray);
+//            [uuidMutablearray writeToFile:fileName atomically:YES];
+//            //=====================================
+//            NSArray *pathsG=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//            //NSLog(@"Get document path: %@",[pathsG objectAtIndex:0]);
+//            NSString *fileNameG=[[pathsG objectAtIndex:0] stringByAppendingPathComponent:@"Guo.txt"];
+//            NSMutableArray *uuidMutablearrayG=[NSMutableArray arrayWithObjects:@"新浪用户", @"新浪密码",nil];
+//            //NSLog(@"sadafdasfas%@",uuidMutablearrayG);
+//            [uuidMutablearrayG writeToFile:fileNameG atomically:YES];
+//        }
+//        else if ([stringExist intValue]==300) {
+//            UIAlertView *soundAlert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"用户存在" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+//            [soundAlert show];
+//            [soundAlert release];
+//            //=========将用户的UUid放入本地=============================================
+//            NSArray *paths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//            //NSLog(@"Get document path: %@",[paths objectAtIndex:0]);
+//            NSString *fileName=[[paths objectAtIndex:0] stringByAppendingPathComponent:@"myFile.txt"];
+//            NSString *content=stringUuid;
+//            //NSLog(@"wosds%@",content);
+//            NSMutableArray *uuidMutablearray=[NSMutableArray arrayWithObject:content];
+//            //NSLog(@"sadafdasfas%@",uuidMutablearray);
+//            [uuidMutablearray writeToFile:fileName atomically:YES];
+//            //=====================================
+//            NSArray *pathsG=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//            //NSLog(@"Get document path: %@",[pathsG objectAtIndex:0]);
+//            NSString *fileNameG=[[pathsG objectAtIndex:0] stringByAppendingPathComponent:@"Guo.txt"];
+//            NSMutableArray *uuidMutablearrayG=[NSMutableArray arrayWithObjects:@"新浪用户", @"新浪密码",nil];
+//            //NSLog(@"sadafdasfas%@",uuidMutablearrayG);
+//            [uuidMutablearrayG writeToFile:fileNameG atomically:YES];
+//            [self.view removeFromSuperview];
+//        }else{
+//            //=========将用户的UUid放入本地=============================================
+//            NSArray *paths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//            //NSLog(@"Get document path: %@",[paths objectAtIndex:0]);
+//            NSString *fileName=[[paths objectAtIndex:0] stringByAppendingPathComponent:@"myFile.txt"];
+//            NSString *content=stringUuid;
+//            //NSLog(@"wosds%@",content);
+//            NSMutableArray *uuidMutablearray=[NSMutableArray arrayWithObject:content];
+//            //NSLog(@"sadafdasfas%@",uuidMutablearray);
+//            [uuidMutablearray writeToFile:fileName atomically:YES];
+//            
+//            //=====================================
+//            NSArray *pathsG=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//            //NSLog(@"Get document path: %@",[pathsG objectAtIndex:0]);
+//            NSString *fileNameG=[[pathsG objectAtIndex:0] stringByAppendingPathComponent:@"Guo.txt"];
+//            NSMutableArray *uuidMutablearrayG=[NSMutableArray arrayWithObjects:@"新浪用户名", @"新浪密码",nil];
+//            //NSLog(@"sadafdasfas%@",uuidMutablearrayG);
+//            [uuidMutablearrayG writeToFile:fileNameG atomically:YES];
+//        }
         
         
 //        NSArray *path=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -456,7 +459,9 @@
 }
 -(void)resignDate{
     numberSum=3;
-    NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/user/IF00034"];
+    NSString* str=@"servlet/reg";
+    NSString* strURL=globalURL(str);
+    NSURL* url=[NSURL URLWithString:strURL];
     ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
     [rrequest setPostValue:self.mail forKey: @"mail"];
     [rrequest setDelegate:self];
@@ -465,13 +470,14 @@
 
 -(void)loginDate{
     numberSum=4;
-    NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/user/IF00035"];
+    NSString* str=@"mac/user/IF00035";
+    NSString* strURL=globalURL(str);
+    NSURL* url=[NSURL URLWithString:strURL];
     ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
     [rrequest setPostValue:self.mail forKey: @"mail"];
     //NSLog(@"%@",self.mail);
     [rrequest setDelegate:self];
-    [rrequest startAsynchronous];
-}
+    [rrequest startAsynchronous];}
 
 -(void)doneWon{
     numberSum=0;
@@ -488,7 +494,9 @@
         [soundAlert release];
     }
     else{
-        NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/user/IF00040"];
+        NSString* str=@"mac/user/IF00040";
+        NSString* strURL=globalURL(str);
+        NSURL* url=[NSURL URLWithString:strURL];
         ASIFormDataRequest *rrequest =[ASIFormDataRequest  requestWithURL:url];
         NSArray *path=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *docDir=[path objectAtIndex:0];
@@ -562,7 +570,9 @@
     [loginView.field1 endEditing:YES];
     
     numberSum=5;
-    NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/msg/IF00067"];
+    NSString* str=@"mac/msg/IF00067";//忘记密码接口
+    NSString* strURL=globalURL(str);
+    NSURL* url=[NSURL URLWithString:strURL];
     ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
     [rrequest setPostValue:self.mail forKey: @"mail"];
     NSLog(@"%@",self.mail);
@@ -599,19 +609,28 @@
 
 -(void)weibologin
 {
-    sinaWeibo = [[SinaWeibo alloc] initWithAppKey:kAppKey appSecret:kAppSecret appRedirectURI:kAppRedirectURI andDelegate:self];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary *sinaweiboInfo = [defaults objectForKey:@"SinaWeiboAuthData"];
-    if ([sinaweiboInfo objectForKey:@"AccessTokenKey"] && [sinaweiboInfo objectForKey:@"ExpirationDateKey"] && [sinaweiboInfo objectForKey:@"UserIDKey"])
-    {
-        sinaWeibo.accessToken = [sinaweiboInfo objectForKey:@"AccessTokenKey"];
-        sinaWeibo.expirationDate = [sinaweiboInfo objectForKey:@"ExpirationDateKey"];
-        sinaWeibo.userID = [sinaweiboInfo objectForKey:@"UserIDKey"];
-    }
-    [sinaWeibo logIn];
-    sinaWeibo.delegate=self;
+    [_weiboSignIn signInOnViewController:self];
 }
-
+- (void)finishedWithAuth:(WeiboAuthentication *)auth error:(NSError *)error {
+    if (error) {
+        NSLog(@"failed to auth: %@", error);
+    }
+    else {
+        NSLog(@"Success to auth: %@", auth.userId);
+        numberSum=1;
+       
+        NSString *stringUrl=[NSString stringWithFormat:@"https://api.weibo.com/2/users/show.json?uid=%@&access_token=%@",auth.userId,auth.accessToken];
+        NSLog(@"接口1：：：：%@",stringUrl);
+        NSURL* url=[NSURL URLWithString:stringUrl];
+        ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
+        request.delegate = self;
+        request.shouldAttemptPersistentConnection = NO;
+        [request setValidatesSecureCertificate:NO];
+        [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+        //[request setDidFailSelector:@selector(requestDidFailed:)];
+        [request startAsynchronous];
+            }
+}
 -(void)affirm{
     
     [photoView removeFromSuperview];
@@ -799,90 +818,25 @@
 
 #pragma mark - SinaWeibo Delegate
 
-- (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
-{
-    numberSum=1;
-    //NSLog(@"sinaweiboDidLogIn userID = %@ accesstoken = %@ expirationDate = %@ refresh_token = %@", sinaweibo.userID, sinaweibo.accessToken, sinaweibo.expirationDate,sinaweibo.refreshToken);
-    //NSLog(@"1111111111111111111111111111");
-    //numberSum=[sinaWeibo.userID integerValue];
-    NSURL *url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/sina/SIF00000"];
-    ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
-    [rrequest setPostValue:sinaWeibo.userID forKey: @"suid"];
-    
-    [rrequest setDelegate:self];
-    [rrequest startAsynchronous];
-    //=================新浪微博登陆成功进入下个界面=======================================
-    //    SinaGetViewController *sinaGetView=[[SinaGetViewController alloc]init];
-    //    //[self.navigationController pushViewController:sinaGetView animated:YES];
-    //    [self.view addSubview:sinaGetView.view];
-    
-}
+//- (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
+//{
+//    numberSum=1;
+//    //NSLog(@"sinaweiboDidLogIn userID = %@ accesstoken = %@ expirationDate = %@ refresh_token = %@", sinaweibo.userID, sinaweibo.accessToken, sinaweibo.expirationDate,sinaweibo.refreshToken);
+//    //NSLog(@"1111111111111111111111111111");
+//    //numberSum=[sinaWeibo.userID integerValue];
+//    NSURL *url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/sina/SIF00000"];
+//    ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
+//    //[rrequest setPostValue:sinaWeibo.userID forKey: @"suid"];
+//    
+//    [rrequest setDelegate:self];
+//    [rrequest startAsynchronous];
+//    //=================新浪微博登陆成功进入下个界面=======================================
+//    //    SinaGetViewController *sinaGetView=[[SinaGetViewController alloc]init];
+//    //    //[self.navigationController pushViewController:sinaGetView animated:YES];
+//    //    [self.view addSubview:sinaGetView.view];
+//    
+//}
 
-- (void)sinaweiboDidLogOut:(SinaWeibo *)sinaweibo
-{
-    NSLog(@"sinaweiboDidLogOut");
-    
-    
-}
-
-- (void)sinaweiboLogInDidCancel:(SinaWeibo *)sinaweibo
-{
-    NSLog(@"sinaweiboLogInDidCancel");
-    //====================新浪微博登陆不成功返回==================================================
-    
-}
-
-- (void)sinaweibo:(SinaWeibo *)sinaweibo logInDidFailWithError:(NSError *)error
-{
-    NSLog(@"sinaweibo logInDidFailWithError %@", error);
-}
-
-- (void)sinaweibo:(SinaWeibo *)sinaweibo accessTokenInvalidOrExpired:(NSError *)error
-{
-    NSLog(@"sinaweiboAccessTokenInvalidOrExpired %@", error);
-     [self removeAuthData];
-}
-- (void)removeAuthData
-{
-    NSLog(@"removeAuthData");
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"SinaWeiboAuthData"];
-}
-#pragma mark - SinaWeiboRequest Delegate
-
-- (void)request:(SinaWeiboRequest *)request didFailWithError:(NSError *)error
-{
-    
-    
-}
-
-- (void)request:(SinaWeiboRequest *)request didFinishLoadingWithResult:(id)result
-{
-    
-    if([request.url hasSuffix:@"friendships/friends/bilateral.json"])
-    {
-        //
-        //NSDictionary *dic=
-        
-        mutableArray=[result objectForKey:@"users"];
-        //nameArray=[mutableArray objectAtIndex:2];
-        //dicMu=[mutableArray objectForKey:@"statuses_count"];
-        NSLog(@"%@",result);
-        NSDictionary *dic=[mutableArray objectAtIndex:0];
-        NSLog(@"rrrrrrrrrrrrr%@",[dic objectForKey:@"name"]);
-        
-        
-        
-        
-    }
-    if ([request.url hasSuffix:@"users/show.json"])
-    {
-        NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:result];
-        number=[result objectForKey:@"id"];
-               //NSNumber *a=[mutableArray objectAtIndex:0];
-        currentAuthNameLabel.text = [NSString stringWithFormat:@"当前账号：%@", [userInfo objectForKey:@"id"]];
-        
-    }
-}
 
 
 

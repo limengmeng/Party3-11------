@@ -122,6 +122,7 @@
                     cell.frame = UIEdgeInsetsInsetRect(originCellFrame, UIEdgeInsetsMake(inset, inset, inset, inset));
                 }
                 cell.layer.cornerRadius=cell.frame.size.width/2*0.98;
+                cell.layer.borderWidth=5;
                 [UIView commitAnimations];
             }
             break;   

@@ -23,10 +23,150 @@
     if (self) {
         // Custom initialization
         //self.title=@"活动";
+        Allparty=[UIButton buttonWithType:UIButtonTypeCustom];
+        Allparty.frame=CGRectMake(0, 0, 103, 23);
+        [Allparty setImage:[UIImage imageNamed:@"quanbu1da@2x.png"] forState:UIControlStateNormal];
+        [Allparty setImage:[UIImage imageNamed:@"quanbu2da@2x.png"] forState:UIControlStateSelected];
+        [Allparty setSelected:YES];
+        [self.view addSubview:Allparty];
+        
+        ReliableParty=[UIButton buttonWithType:UIButtonTypeCustom];
+        ReliableParty.frame=CGRectMake(103, 0, 114, 23);
+        [ReliableParty setImage:[UIImage imageNamed:@"kaopu1da@2x.png"] forState:UIControlStateNormal];
+        [ReliableParty setImage:[UIImage imageNamed:@"kaopu2da@2x.png"] forState:UIControlStateSelected];
+        [ReliableParty setSelected:NO];
+        [self.view addSubview:ReliableParty];
+        
+        MyParty=[UIButton buttonWithType:UIButtonTypeCustom];
+        MyParty.frame=CGRectMake(217, 0, 103, 23);
+        [MyParty setImage:[UIImage imageNamed:@"wode1da@2x.png"] forState:UIControlStateNormal];
+        [MyParty setImage:[UIImage imageNamed:@"wode2da@2x.png"] forState:UIControlStateSelected];
+        [MyParty setSelected:NO];
+        [self.view addSubview:MyParty];
+        [Allparty addTarget:self action:@selector(allButtonPressed) forControlEvents:UIControlEventTouchDown];
+        [ReliableParty addTarget:self action:@selector(realiButtonPressed) forControlEvents:UIControlEventTouchDown];
+        [MyParty addTarget:self action:@selector(myButtonPressed) forControlEvents:UIControlEventTouchDown];
         self.tabBarController.view.backgroundColor=[UIColor clearColor];
        
     }
     return self;
+}
+-(void)allButtonPressed
+{
+    [self.tableViewParty reloadData];
+    self.tableViewParty.contentOffset=CGPointMake(0.0, 0.0);
+    flag=0;
+    [[ASIHTTPRequest sharedQueue] cancelAllOperations];
+    ChoseNum=1;
+    [Allparty setSelected:YES];
+    [ReliableParty setSelected:NO];
+    [MyParty setSelected:NO];
+    if (segmentNum==0) {
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00101?uuid=%@&&sort=1&&lat=39.972946&&lng=116.407066",userUUid];
+        NSString* strURL=globalURL(str);
+        NSLog(@"全部派对，按照附近距离排序：%@",strURL);
+        NSURL* url=[NSURL URLWithString:strURL];
+        ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
+        request.delegate = self;
+        request.shouldAttemptPersistentConnection = NO;
+        [request setValidatesSecureCertificate:NO];
+        [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+        [request setDidFailSelector:@selector(requestDidFailed:)];
+        [request startAsynchronous];
+    }
+    else
+    {
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00101?uuid=%@&&sort=2&&lat=39.972946&&lng=116.407066",userUUid];
+        NSString* strURL=globalURL(str);
+        NSLog(@"全部派对,按照最新时间排序:%@",strURL);
+        NSURL* url=[NSURL URLWithString:strURL];
+        ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
+        request.delegate = self;
+        request.shouldAttemptPersistentConnection = NO;
+        [request setValidatesSecureCertificate:NO];
+        [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+        [request setDidFailSelector:@selector(requestDidFailed:)];
+        [request startAsynchronous];
+    }
+}
+-(void)realiButtonPressed
+{
+    [self.tableViewParty reloadData];
+    self.tableViewParty.contentOffset=CGPointMake(0.0, 0.0);
+    
+    flag=0;
+    ChoseNum=2;
+    [[ASIHTTPRequest sharedQueue] cancelAllOperations];
+    [Allparty setSelected:NO];
+    [ReliableParty setSelected:YES];
+    [MyParty setSelected:NO];
+    
+    if (segmentNum==0) {
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00102?uuid=%@&&sort=1&&lat=39.972946&&lng=116.407066",userUUid];
+        NSString* strURL=globalURL(str);
+        NSLog(@"靠谱派对，距离排序:%@",strURL);
+        NSURL* url=[NSURL URLWithString:strURL];
+        ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
+        request.delegate = self;
+        request.shouldAttemptPersistentConnection = NO;
+        [request setValidatesSecureCertificate:NO];
+        [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+        [request setDidFailSelector:@selector(requestDidFailed:)];
+        [request startAsynchronous];
+    }
+    else
+    {
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00102?uuid=%@&&sort=2&&lat=39.972946&&lng=116.407066",userUUid];
+        NSString* strURL=globalURL(str);
+        NSLog(@"靠谱派对，时间排序:%@",strURL);
+        NSURL* url=[NSURL URLWithString:strURL];
+        ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
+        request.delegate = self;
+        request.shouldAttemptPersistentConnection = NO;
+        [request setValidatesSecureCertificate:NO];
+        [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+        [request setDidFailSelector:@selector(requestDidFailed:)];
+        [request startAsynchronous];
+    }
+}
+-(void)myButtonPressed
+{
+    [self.tableViewParty reloadData];
+    self.tableViewParty.contentOffset=CGPointMake(0.0, 0.0);
+    
+    flag=0;
+    ChoseNum=3;
+    [[ASIHTTPRequest sharedQueue] cancelAllOperations];
+    [Allparty setSelected:NO];
+    [ReliableParty setSelected:NO];
+    [MyParty setSelected:YES];
+    if (segmentNum==0) {
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00103?uuid=%@&&sort=1&&lat=39.972946&&lng=116.407066",userUUid];
+        NSString* strURL=globalURL(str);
+        NSLog(@"我的派对，距离排序:%@",strURL);
+        NSURL* url=[NSURL URLWithString:strURL];
+        ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
+        request.delegate = self;
+        request.shouldAttemptPersistentConnection = NO;
+        [request setValidatesSecureCertificate:NO];
+        [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+        [request setDidFailSelector:@selector(requestDidFailed:)];
+        [request startAsynchronous];
+    }
+    else
+    {
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00103?uuid=%@&&sort=2&&lat=39.972946&&lng=116.407066",userUUid];
+        NSString* strURL=globalURL(str);
+        NSLog(@"我的派对，时间排序:%@",strURL);
+        NSURL* url=[NSURL URLWithString:strURL];
+        ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
+        request.delegate = self;
+        request.shouldAttemptPersistentConnection = NO;
+        [request setValidatesSecureCertificate:NO];
+        [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+        [request setDidFailSelector:@selector(requestDidFailed:)];
+        //[request startAsynchronous];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -73,21 +213,20 @@
 	grayRC.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 0, 2);
     
 	grayRC.height = 30;// 强制高度  一般可以用于全是图片的选项
-    //grayRC.LKWidth = 100;// 强制宽度
-    //grayRC.thumb.tintColor=[UIColor colorWithRed:52.0/255 green:52.0/255 blue:52.0/255 alpha:1];
     grayRC.thumb.tintColor=[UIColor whiteColor];
     grayRC.thumb.textColor=[UIColor colorWithRed:210.0/255 green:100.0/255 blue:85.0/255 alpha:1];
     grayRC.thumb.textShadowOffset=CGSizeMake(0, 0);
-    //grayRC.thumb.backgroundColor=[UIColor whiteColor];
-    //grayRC.thumb.backgroundColor=[UIColor colorWithRed:252.0/255 green:252.0/255 blue:252.0/255 alpha:1];
     grayRC.center = CGPointMake(160, 270);
     grayRC.tag = 3;
     grayRC.selectedIndex=1;
     segmentBar=[[UIBarButtonItem alloc] initWithCustomView:grayRC];
     self.navigationItem.leftBarButtonItem=segmentBar;
 
+    ChoseNum=1;
     segmentNum=1;
     flag=0;
+   
+    
    
     //=====================创建=========================================================
     UIButton* creatButton=[UIButton buttonWithType:UIButtonTypeCustom];
@@ -95,7 +234,7 @@
     creatButton.frame=CGRectMake(0.0, 0.0, 50, 31);
     [creatButton addTarget:self action:@selector(CreateNewAct) forControlEvents:UIControlEventTouchDown];
     self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]initWithCustomView:creatButton];
-    UITableView* table=[[UITableView alloc]initWithFrame:mainscreen style:UITableViewStyleGrouped];
+    UITableView* table=[[UITableView alloc]initWithFrame:CGRectMake(0, 23, 320, mainscreenhight-23) style:UITableViewStyleGrouped];
     self.tableViewParty=table;
     [table release];
     [self.view addSubview:self.tableViewParty];
@@ -103,6 +242,7 @@
     tableViewParty.backgroundColor=[UIColor colorWithRed:248.0/255 green:248.0/255 blue:248.0/255 alpha:1];
     self.tableViewParty.delegate=self;
     self.tableViewParty.dataSource=self;
+
     _slimeView=[[SRRefreshView alloc] init];
     _slimeView.delegate=self;
     _slimeView.upInset=10;
@@ -113,25 +253,17 @@
 //===========多线程==============================================
 -(void)requestDate
 {
-    dispatch_async(dispatch_get_global_queue(0, 0),
-                   ^{//NSURL *urlString =[NSURL URLWithString:PICURL];
-//                       NSData *content=[NSData dataWithContentsOfURL:urlString];
-//                       UIImage *image=[UIImage imageWithData:content];
-                       NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00001?uuid=%@",userUUid];
-                       NSLog(@"接口1：：：：%@",stringUrl);
-                       NSURL* url=[NSURL URLWithString:stringUrl];
-                       ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
-                       request.delegate = self;
-                       request.shouldAttemptPersistentConnection = NO;
-                       [request setValidatesSecureCertificate:NO];
-                       [request setDefaultResponseEncoding:NSUTF8StringEncoding];
-                       [request setDidFailSelector:@selector(requestDidFailed:)];
-                       [request startAsynchronous];
-                       //更新界面时用到
-                       dispatch_async(dispatch_get_main_queue(), ^{
-                           //[self.imageView setImage:image];
-                       });
-                   });
+   NSString* str=[NSString stringWithFormat:@"mac/party/IF00101?uuid=%@&&sort=1&&lat=39.972946&&lng=116.407066",userUUid];
+   NSString *stringUrl=globalURL(str);
+   NSLog(@"接口1：：：：%@",stringUrl);
+   NSURL* url=[NSURL URLWithString:stringUrl];
+   ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
+   request.delegate = self;
+   request.shouldAttemptPersistentConnection = NO;
+   [request setValidatesSecureCertificate:NO];
+   [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+   [request setDidFailSelector:@selector(requestDidFailed:)];
+   [request startAsynchronous];
 }
 
 //=============经纬度代理方法=========================================
@@ -182,7 +314,9 @@
 
         NSLog(@"经纬度输出：%f,%f",self.lat,self.lng);
         NSLog(@"用户uuid%@",self.userUUid);
-        NSURL *url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/party/IF00001"];
+        NSString* str=@"mac/party/IF00001";
+        NSString* strURL=globalURL(str);
+        NSURL *url=[NSURL URLWithString:strURL];
         ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
         [rrequest setPostValue:self.userUUid forKey: @"uuid"];
         [rrequest setPostValue:[NSString stringWithFormat:@"%f",self.lat] forKey:@"lat"];
@@ -196,7 +330,8 @@
         segmentNum=1;
         [self.tableViewParty reloadData];
         flag=0;
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00001?uuid=%@",userUUid];
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00001?uuid=%@",userUUid];
+        NSString *stringUrl=globalURL(str);
         NSLog(@"接口1：：：：%@",stringUrl);
         NSURL* url=[NSURL URLWithString:stringUrl];
         ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
@@ -210,10 +345,6 @@
 }
 -(void)requestDidFailed:(ASIHTTPRequest *)request
 {
-    NSLog(@"wang luo bu gei li");
-//    UIAlertView *soundAlert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"网络不给力，没有获取到数据" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-//    [soundAlert show];
-//    [soundAlert release];
     NSArray *path=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *docDir=[path objectAtIndex:0];
     //NSFileManager *fm=[NSFileManager defaultManager];
@@ -267,11 +398,19 @@
 
 -(void)CreateNewAct
 {
-    NSLog(@"创建");
-    creatPartyViewController=[[CreatPartyViewController alloc] initWithNibName:@"CreatPartyViewController" bundle:nil];
-    creatPartyViewController.title=@"创建派对";
-    creatPartyViewController.from_P_type=@"1";
-    [self.navigationController pushViewController:creatPartyViewController animated:YES];
+//    NSLog(@"创建");
+//    creatPartyViewController=[[CreatPartyViewController alloc] initWithNibName:@"CreatPartyViewController" bundle:nil];
+//    creatPartyViewController.title=@"创建派对";
+//    creatPartyViewController.from_P_type=@"1";
+//    [self.navigationController pushViewController:creatPartyViewController animated:YES];
+    
+    NSLog(@"跳到地图");
+    mapControl=[[MapViewController alloc]init];
+    mapControl.title=@"创建派对地点";
+    mapControl.type=@"1";
+    [self.navigationController pushViewController:mapControl animated:YES];
+
+    //[mapControl release];
     
     //[self.tabBarController.view addSubview:creatPartyViewController.view];
 }
@@ -434,7 +573,7 @@
     cell.backgroundView=[[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"PRframe@2x.png"]]autorelease];
 
     NSDictionary* dict=[self.sumArray objectAtIndex:section];
-    //NSLog(@"%@",dict);
+    NSLog(@"%@",dict);
     NSString *stringType=[dict objectForKey:@"P_TYPE"];
     if (![[stringType substringToIndex:1] isEqualToString:@"1"]) {
         lable5.text=[dict objectForKey:@"P_LABLE"];
@@ -443,7 +582,7 @@
     }
        
     lable7.text=[dict objectForKey:@"P_TITLE"];
-    NSMutableString *mutableStringLocal=[[NSMutableString alloc] initWithFormat:@"%@",[dict objectForKey:@"P_LOCAL"]];
+    NSMutableString *mutableStringLocal=[[NSMutableString alloc] initWithFormat:@"%@",[dict objectForKey:@"P_DISTANCEC"]];
     lable2.text=mutableStringLocal;
     [mutableStringLocal release];
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
@@ -457,7 +596,8 @@
     NSString *confromTimespStr = [formatter stringFromDate:date];
     lable3.text=confromTimespStr;
     [formatter release];
-    NSDictionary* user=[dict objectForKey:@"user"];
+    //更改过大写
+    NSDictionary* user=[dict objectForKey:@"USER"];
     lable4.text=[user objectForKey:@"USER_NICK"];
     
     //================创建者图片=============================================
@@ -483,7 +623,7 @@
     }
     NSMutableArray *mutableArray=[[NSMutableArray alloc]init];
     //===============联合创建人名字和照片======================================
-    NSDictionary * mutableArrayDic=[dict objectForKey:@"users"];
+    NSDictionary * mutableArrayDic=[dict objectForKey:@"Users"];
     NSMutableString *stringNameAll=[[NSMutableString alloc]init];
     int i=0;
     for (NSDictionary *dic in mutableArrayDic) {
@@ -576,7 +716,9 @@
     else{
         if (segmentNum==0) {
             //加载更多,附近
-            NSURL *url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/party/IF00001"];
+            NSString* str=@"mac/party/IF00001";
+            NSString* strURL=globalURL(str);
+            NSURL *url=[NSURL URLWithString:strURL];
             ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
             [rrequest setPostValue:self.userUUid forKey: @"uuid"];
             [rrequest setPostValue:[NSString stringWithFormat:@"%f",self.lat] forKey:@"lat"];
@@ -589,7 +731,8 @@
         {
             //加载更多，所有
             [self getUUidForthis];
-            NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00001?uuid=%@&&from=%d",userUUid,[self.sumArray count]+1];
+            NSString* str=[NSString stringWithFormat:@"mac/party/IF00001?uuid=%@&&from=%d",userUUid,[self.sumArray count]+1];
+            NSString *stringUrl=globalURL(str);
             NSLog(@"加载更多:%@",stringUrl);
             NSURL* url=[NSURL URLWithString:stringUrl];
             ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
@@ -642,7 +785,8 @@
     flag=0;
     //====================获取数据================================
     if (segmentNum==1) {
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00001?uuid=%@",userUUid];
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00001?uuid=%@",userUUid];
+        NSString *stringUrl=globalURL(str);
         NSURL* url=[NSURL URLWithString:stringUrl];
         ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
         request.delegate = self;
@@ -654,7 +798,9 @@
         
     }
     if (segmentNum==0) {
-        NSURL *url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/party/IF00001"];
+        NSString* str=@"mac/party/IF00001";
+        NSString* strURL=globalURL(str);
+        NSURL *url=[NSURL URLWithString:strURL];
         ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
         [rrequest setPostValue:self.userUUid forKey: @"uuid"];
         [rrequest setPostValue:[NSString stringWithFormat:@"%f",self.lat] forKey:@"lat"];
@@ -702,6 +848,7 @@
 -(void)dealloc
 {
     [super dealloc];
+    [mapControl release];
     [twoViewController release];
     [creatPartyViewController release];
     //[grayRC release];

@@ -49,6 +49,7 @@
 @property (strong,nonatomic) NSString * map_city,*map_local;
 @property float lat,lng;
 //*******************************
+@property (nonatomic,retain) NSMutableArray *friengArr;
 
 @property (nonatomic,retain) NSString *P_title;
 

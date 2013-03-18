@@ -70,7 +70,8 @@
     [self.view addSubview:message];
     [message release];
 
-    NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00007?uuid=%@&&c_id=%@",userUUid,self.C_id];
+    NSString* str=[NSString stringWithFormat:@"mac/party/IF00007?uuid=%@&&c_id=%@",userUUid,self.C_id];
+    NSString *stringUrl=globalURL(str);
     NSLog(@"活动中的玩伴;接口7 网址:%@",stringUrl);
     NSURL* url=[NSURL URLWithString:stringUrl];
     
@@ -260,12 +261,13 @@
         NSLog(@"%@",dict);
         NSString* userid=[dict objectForKey:@"USER_ID"];
         NSLog(@"添加好友，接口12+++自己id:%@好友id:%@",self.userUUid,userid);
-        NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/user/IF00012"];
+        NSString* str=@"mac/user/IF00012";
+        NSString* strURL=globalURL(str);
+        NSURL* url=[NSURL URLWithString:strURL];
         ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
         [rrequest setPostValue:self.userUUid forKey: @"uuid"];
         [rrequest setPostValue:userid forKey:@"user_id"];
         [rrequest startSynchronous];
-
     }
 }
 -(void)ontime
@@ -299,7 +301,8 @@
     }
     else
     {
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00007?uuid=%@&&c_id=%@&&from=%d",userUUid,self.C_id,self.friendlist.count+1];
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00007?uuid=%@&&c_id=%@&&from=%d",userUUid,self.C_id,self.friendlist.count+1];
+        NSString *stringUrl=globalURL(str);
         NSLog(@"加载更多++++++活动中的玩伴;接口7 网址:%@",stringUrl);
         NSURL* url=[NSURL URLWithString:stringUrl];
         

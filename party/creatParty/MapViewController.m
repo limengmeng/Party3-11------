@@ -9,6 +9,8 @@
 #import "MapViewController.h"
 #import "CustomAnnotation.h"
 #import <QuartzCore/QuartzCore.h>
+#import "CreatBeforeViewController.h"
+
 int flag=0;
 @interface MapViewController ()
 
@@ -21,6 +23,7 @@ int flag=0;
 
 @synthesize map;
 @synthesize geocoder;
+@synthesize type;
 
 - (id)init
 {
@@ -191,10 +194,20 @@ int flag=0;
 }
 - (void)showDetails
 {
-    NSLog(@"showDetails button clicked!");
+//    NSLog(@"showDetails button clicked!");
     [delegate passCity:self.city andLocal:self.local];
     [delegate passLat:lat andLng:lng];
-    [self.navigationController popViewControllerAnimated:YES];
+//    [self.navigationController popViewControllerAnimated:YES];
+    NSLog(@"跳到创建初始界面");
+    creatbefore=[[CreatBeforeViewController alloc]init];
+    creatbefore.type=self.type;
+    creatbefore.city=self.city;
+    creatbefore.local=self.local;
+    creatbefore.lat=lat;
+    creatbefore.lng=lng;
+    
+    [self.navigationController pushViewController:creatbefore animated:YES];
+    
 }
 
 - (void)longPress:(UIGestureRecognizer*)gestureRecognizer
@@ -265,6 +278,7 @@ int flag=0;
 
 -(void)dealloc
 {
+    [creatbefore release];
     [map release];
     [geocoder release];
     [city release];

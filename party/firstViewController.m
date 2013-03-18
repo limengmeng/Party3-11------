@@ -83,7 +83,8 @@ int MessFlag=0;//判断是否需要重新加载消息页面
 {
     dispatch_async(dispatch_get_global_queue(0, 0),
                    ^{
-                       NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/msg/IF00060?uuid=%@",userUUid];
+                       NSString* str=[NSString stringWithFormat:@"mac/msg/IF00060?uuid=%@",userUUid];
+                       NSString *stringUrl=globalURL(str);
                        NSURL* url=[NSURL URLWithString:stringUrl];
                        ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
                        request.shouldAttemptPersistentConnection = NO;
@@ -174,7 +175,8 @@ int MessFlag=0;//判断是否需要重新加载消息页面
         choiceNumber=1;
         total=0;
         flag=0;
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00050?uuid=%@&&m_type=party",userUUid];
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00050?uuid=%@&&m_type=party",userUUid];
+        NSString *stringUrl=globalURL(str);
         NSURL* url=[NSURL URLWithString:stringUrl];
         NSLog(@"派对消息：%@",url);
         NSLog(@"%@",stringUrl);
@@ -1415,18 +1417,22 @@ int MessFlag=0;//判断是否需要重新加载消息页面
         
         if (sendDate==1) {
             
-            NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/party/IF00054"];
+            NSString* str=@"mac/party/IF00054";
+            NSString* strURL=globalURL(str);
+            NSURL* url=[NSURL URLWithString:strURL];
             ASIFormDataRequest *request =  [ASIFormDataRequest  requestWithURL:url];
             [request setPostValue:senderTo forKey: @"user_id"];
             
             NSLog(@"self.senderTo======%@",senderTo);
             
-             [request setPostValue:party_id forKey:@"p_id"];            //[request setDelegate:self];
+            [request setPostValue:party_id forKey:@"p_id"];            //[request setDelegate:self];
             [request startSynchronous];
         }
         else if(sendDate==2){
             
-            NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/party/IF00053"];
+            NSString* str=@"mac/party/IF00053";
+            NSString* strURL=globalURL(str);
+            NSURL* url=[NSURL URLWithString:strURL];
             ASIFormDataRequest *request =  [ASIFormDataRequest  requestWithURL:url];
             [request setPostValue:self.userUUid forKey: @"uuid"];
             [request setPostValue:party_id forKey:@"p_id"];
@@ -1434,7 +1440,8 @@ int MessFlag=0;//判断是否需要重新加载消息页面
             [request startSynchronous];
         }
     }
-    NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00050?uuid=%@&&m_type=party&&from=%d&&to=%d",userUUid,1,[self.message count]];
+    NSString* str=[NSString stringWithFormat:@"mac/party/IF00050?uuid=%@&&m_type=party&&from=%d&&to=%d",userUUid,1,[self.message count]];
+    NSString *stringUrl=globalURL(str);
     flag=0;
     NSURL* url=[NSURL URLWithString:stringUrl];
     NSLog(@"获取已经修改的派对消息：%@",url);
@@ -1505,7 +1512,8 @@ int MessFlag=0;//判断是否需要重新加载消息页面
     {
         [friBtn removeFromSuperview];
         friBtn=nil;
-        NSString *cleanUrlStr=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/msg/IF00061?uuid=%@&m_type=1",userUUid];
+        NSString* str=[NSString stringWithFormat:@"mac/msg/IF00061?uuid=%@&m_type=1",userUUid];
+        NSString *cleanUrlStr=globalURL(str);
         NSLog(@"清空friend消息:%@",cleanUrlStr);
         NSURL* cleanurl=[NSURL URLWithString:cleanUrlStr];
         
@@ -1514,7 +1522,8 @@ int MessFlag=0;//判断是否需要重新加载消息页面
     }
     
     
-    NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/user/IF00016?uuid=%@&&type=friend",userUUid];
+    NSString* str=[NSString stringWithFormat:@"mac/user/IF00016?uuid=%@&&type=friend",userUUid];
+    NSString *stringUrl=globalURL(str);
     NSURL* url=[NSURL URLWithString:stringUrl];
     NSLog(@"好友消息：%@",url);
     NSLog(@"%@",stringUrl);
@@ -1537,7 +1546,8 @@ int MessFlag=0;//判断是否需要重新加载消息页面
     if (mesBtn!=nil) {
         [mesBtn removeFromSuperview];
         mesBtn=nil;
-        NSString *cleanUrlStr=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/msg/IF00061?uuid=%@&m_type=2",userUUid];
+        NSString* str=[NSString stringWithFormat:@"mac/msg/IF00061?uuid=%@&m_type=2",userUUid];
+        NSString *cleanUrlStr=globalURL(str);
         NSLog(@"清空party消息:%@",cleanUrlStr);
         NSURL* cleanurl=[NSURL URLWithString:cleanUrlStr];
         
@@ -1546,7 +1556,8 @@ int MessFlag=0;//判断是否需要重新加载消息页面
     }
    
     //测试from有问题,已经解决
-    NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00050?uuid=%@&&m_type=party",userUUid];
+    NSString* str=[NSString stringWithFormat:@"mac/party/IF00050?uuid=%@&&m_type=party",userUUid];
+    NSString *stringUrl=globalURL(str);
     NSLog(@"派对消息：：：%@",stringUrl);
     NSURL* url=[NSURL URLWithString:stringUrl];
     
@@ -1568,7 +1579,8 @@ int MessFlag=0;//判断是否需要重新加载消息页面
     if (sysBtn!=nil) {
         [sysBtn removeFromSuperview];
         sysBtn=nil;
-        NSString *cleanUrlStr=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/msg/IF00061?uuid=%@&m_type=3",userUUid];
+        NSString* str=[NSString stringWithFormat:@"mac/msg/IF00061?uuid=%@&m_type=3",userUUid];
+        NSString *cleanUrlStr=globalURL(str);
         NSLog(@"清空system消息:%@",cleanUrlStr);
         NSURL* cleanurl=[NSURL URLWithString:cleanUrlStr];
         
@@ -1578,7 +1590,8 @@ int MessFlag=0;//判断是否需要重新加载消息页面
        //from有问题，已经解决
     
   
-    NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00018?uuid=%@&&m_type=system",userUUid];
+    NSString* str=[NSString stringWithFormat:@"mac/party/IF00018?uuid=%@&&m_type=system",userUUid];
+    NSString *stringUrl=globalURL(str);
     NSLog(@"系统消息:::%@",stringUrl);
     NSURL* url=[NSURL URLWithString:stringUrl];
     ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
@@ -1648,7 +1661,8 @@ int MessFlag=0;//判断是否需要重新加载消息页面
     }
     else
     {
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/user/IF00016?uuid=%@&&type=friend&&from=%d",userUUid,[self.friendlist count]+1];
+        NSString* str=[NSString stringWithFormat:@"mac/user/IF00016?uuid=%@&&type=friend&&from=%d",userUUid,[self.friendlist count]+1];
+        NSString *stringUrl=globalURL(str);
         NSURL* url=[NSURL URLWithString:stringUrl];
         NSLog(@"加载更多:::好友消息：%@",url);
         NSLog(@"%@",stringUrl);
@@ -1667,7 +1681,8 @@ int MessFlag=0;//判断是否需要重新加载消息页面
         [alert release];
     }
     else{
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00050?uuid=%@&&m_type=party&&from=%d",userUUid,[self.message count]+1];
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00050?uuid=%@&&m_type=party&&from=%d",userUUid,[self.message count]+1];
+        NSString *stringUrl=globalURL(str);
         NSLog(@"派对消息加载更多:::%@",stringUrl);
         NSURL* url=[NSURL URLWithString:stringUrl];
         
@@ -1688,7 +1703,8 @@ int MessFlag=0;//判断是否需要重新加载消息页面
         [alert release];
     }
     else{
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00018?uuid=%@&&m_type=system&&from=%d",userUUid,[self.systemArray count]+1];
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00018?uuid=%@&&m_type=system&&from=%d",userUUid,[self.systemArray count]+1];
+        NSString *stringUrl=globalURL(str);
         NSLog(@"系统加载更多：：：%@",stringUrl);
         NSURL* url=[NSURL URLWithString:stringUrl];
         ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
@@ -1731,8 +1747,8 @@ int MessFlag=0;//判断是否需要重新加载消息页面
 
 -(void)Frichangedatasource
 {
-    //NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/user/IF00016?uuid=%@&&type=friend&&from=%d&&to=%d",userUUid,friendselect+1,friendselect+1];
-    NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/user/IF00016?uuid=%@&&type=friend&&from=%d&&to=%d",userUUid,1,[self.friendlist count]];
+    NSString* str=[NSString stringWithFormat:@"mac/user/IF00016?uuid=%@&&type=friend&&from=%d&&to=%d",userUUid,1,[self.friendlist count]];
+    NSString *stringUrl=globalURL(str);
     choiceNumber=0;
     flag=0;
     NSURL* url=[NSURL URLWithString:stringUrl];
@@ -1740,9 +1756,7 @@ int MessFlag=0;//判断是否需要重新加载消息页面
     NSLog(@"%@",stringUrl);
     ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
     [request setDelegate:self];
-    [request startAsynchronous];
-    
-//    NSData* response=[request responseData];
+    [request startAsynchronous];//    NSData* response=[request responseData];
 //    //NSLog(@"%@",response);
 //    NSError* error;
 //    NSDictionary* bizDic=[NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableLeaves error:&error];

@@ -70,7 +70,8 @@
     stringA=[[NSMutableString alloc]initWithCapacity:100];
     
     //==================请求数据========================================
-    NSString *stringP=[[NSString alloc]initWithFormat:@"http://www.ycombo.com/che/mac/party/IF00002?party_id=%@&&uuid=%@",p_id,userUUid];
+    NSString* str=[NSString stringWithFormat:@"mac/party/IF00002?party_id=%@&&uuid=%@",p_id,userUUid];
+    NSString *stringP=globalURL(str);
     NSLog(@"shuchuwangzhi::::::::::::::::%@",stringP);
     NSURL* url=[NSURL URLWithString:stringP];
     ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
@@ -206,8 +207,10 @@
         if ([[dicParty objectForKey:@"USER_ID"] isEqualToNumber:self.numberUUID])
         {
            
-        NSURL *url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/party/IF00041"];
-        NSLog(@"pidssssssssssss%@",stringPid);
+            NSString* str=@"mac/party/IF00041";
+            NSString* strURL=globalURL(str);
+            NSURL *url=[NSURL URLWithString:strURL];
+            NSLog(@"pidssssssssssss%@",stringPid);
         ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
             [rrequest setPostValue:self.userUUid forKey: @"uuid"];
             [rrequest setPostValue:stringPid forKey: @"p_id"];
@@ -234,7 +237,7 @@
     NSLog(@"join");
     if ([[party objectForKey:@"P_TYPE"]intValue]==1) {
         friend=[[CheckOneViewController alloc]init];
-        friend.spot=1;
+        friend.spot=4;
         friend.from_p_id=[party objectForKey:@"P_ID"];
         [self.navigationController pushViewController:friend animated:YES];
         
@@ -732,7 +735,7 @@
         imageView.userInteractionEnabled = YES;
         
         [imageView setImageWithURL:urlPic refreshCache:NO placeholderImage:[UIImage imageNamed:@"placeholderImage@2x.png"]];//[UIImage imageNamed:@"13.jpg"];
-        imageView.layer.borderWidth=5;
+        //imageView.layer.borderWidth=5;
         imageView.layer.shadowColor= [UIColor blackColor].CGColor;
         imageView.layer.shadowOpacity=20;
         imageView.layer.shadowOffset = CGSizeMake(0, 3);

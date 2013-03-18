@@ -11,6 +11,7 @@
 #import "ModalAlert.h"
 #import "ASIHTTPRequest.h"
 #import "ASIFormDataRequest.h"
+#import "secondViewController.h"
 
 @interface InvitViewController ()
 
@@ -199,7 +200,9 @@
         [alert release];
     }
     else{
-        NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/party/IF00052"];
+        NSString* str=@"mac/party/IF00052";
+        NSString* strURL=globalURL(str);
+        NSURL* url=[NSURL URLWithString:strURL];
         ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
         [rrequest setPostValue:self.userUUid forKey: @"uuid"];
         [rrequest setPostValue:self.from_p_id forKey:@"p_id"];
@@ -214,7 +217,9 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex==1) {
-        NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/party/IF00052"];
+        NSString* str=@"mac/party/IF00052";
+        NSString* strURL=globalURL(str);
+        NSURL* url=[NSURL URLWithString:strURL];
         ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
         [rrequest setPostValue:self.userUUid forKey: @"uuid"];
         [rrequest setPostValue:self.from_p_id forKey:@"p_id"];
@@ -244,7 +249,9 @@
 -(void)sendData{
     dispatch_async(dispatch_get_global_queue(0, 0),
                    ^{
-                       NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/party/IF00051"];
+                       NSString* str=@"mac/party/IF00051";
+                       NSString* strURL=globalURL(str);
+                       NSURL* url=[NSURL URLWithString:strURL];
                        ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
                        
                        NSLog(@"%@",self.friendId);
@@ -292,6 +299,8 @@
                        NSLog(@"self.examineText=======%@",self.examineText);
                        NSLog(@"self.phone=======%@",self.phone);
                        
+                       [stringFriId release];
+                       
                        //rrequest.delegate=self;
                        [rrequest startSynchronous];
 
@@ -308,9 +317,9 @@
                            }
                         });
                    });
-        
     
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    backSpot=2;
+    [self back];
 }
 
 //******************************上传派对详细信息 end************************************
@@ -370,13 +379,13 @@
     [UIView commitAnimations];
 }
 
-
-
 -(void)back
 {
     [[ASIHTTPRequest sharedQueue] cancelAllOperations];
     //中断之前的网络请求
-    [self.navigationController popViewControllerAnimated:YES];
+    if(backSpot==2) [self.navigationController popToRootViewControllerAnimated:YES];
+    else
+        [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

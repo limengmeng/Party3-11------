@@ -65,7 +65,8 @@
     tableview.backgroundView=nil;
     tableview.backgroundColor=[UIColor colorWithRed:248.0/255 green:248.0/255 blue:248.0/255 alpha:1];
     [self.view addSubview:tableview];
-    NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/user/IF00003?uuid=%@&&user_id=%@",userUUid,self.user_id];
+    NSString* str=[NSString stringWithFormat:@"mac/user/IF00003?uuid=%@&&user_id=%@",userUUid,self.user_id];
+    NSString *stringUrl=globalURL(str);
     NSURL* url=[NSURL URLWithString:stringUrl];
     
     ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
@@ -255,7 +256,9 @@
 
 -(void)deleFriend:(id)sender
 {
-    NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/user/IF00022"];
+    NSString* str=@"mac/user/IF00022";
+    NSString* strURL=globalURL(str);
+    NSURL* url=[NSURL URLWithString:strURL];
     ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
     [rrequest setPostValue:self.userUUid forKey:@"uuid"];
     [rrequest setPostValue:self.user_id  forKey:@"user_id"];

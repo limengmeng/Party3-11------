@@ -17,6 +17,10 @@
 #import "CreatPartyViewController.h"
 @interface secondViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,SRRefreshDelegate,CLLocationManagerDelegate>
 {
+    UIButton* Allparty;
+    UIButton* ReliableParty;
+    UIButton* MyParty;
+    int ChoseNum;
     UIBarButtonItem *segmentBar;
     SVSegmentedControl *grayRC;
     UITableView *tableViewParty;
@@ -32,6 +36,8 @@
     int total;//本次接口返回的数量
     TwoViewController *twoViewController;
     CreatPartyViewController *creatPartyViewController;
+    
+    MapViewController *mapControl;
 }
 
 

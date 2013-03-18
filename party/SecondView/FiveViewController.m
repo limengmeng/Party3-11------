@@ -58,7 +58,8 @@
     [super viewDidLoad];
     [self getUUidForthis];
     //==================请求数据========================================
-    NSString *stringP=[[NSString alloc]initWithFormat:@"http://www.ycombo.com/che/mac/party/IF00002?party_id=%@&&uuid=%@",p_id,userUUid];
+    NSString* str=[NSString stringWithFormat:@"mac/party/IF00002?party_id=%@&&uuid=%@",p_id,userUUid];
+    NSString *stringP=globalURL(str);
     NSURL* url=[NSURL URLWithString:stringP];
     ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
     [request setDelegate:self];
@@ -67,7 +68,6 @@
     [request setDefaultResponseEncoding:NSUTF8StringEncoding];
     [request setDidFailSelector:@selector(requestDidFailed:)];
     [request startAsynchronous];
-    [stringP release];
 
     mark=0;
     creId=[[NSMutableArray alloc]init];
@@ -198,7 +198,9 @@
         if ([[dicParty objectForKey:@"USER_ID"] isEqualToNumber:self.numberUUID])
         {
             numFlogLogout=1;
-            NSURL *url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/party/IF00041"];
+            NSString* str=@"mac/party/IF00041";
+            NSString* strURL=globalURL(str);
+            NSURL *url=[NSURL URLWithString:strURL];
             NSLog(@"pidssssssssssss%@",stringPid);
             ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
             [rrequest setPostValue:self.userUUid forKey: @"uuid"];
@@ -229,7 +231,7 @@
     //*******************************带来朋友********************************
     if ([[party objectForKey:@"P_TYPE"]intValue]==1) {
         friend=[[CheckOneViewController alloc]init];
-        friend.spot=1;
+        friend.spot=4;
         friend.from_p_id=[party objectForKey:@"P_ID"];
         [self.navigationController pushViewController:friend animated:YES];
         

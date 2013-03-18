@@ -180,8 +180,10 @@
     if ([oldPass.text isEqualToString:self.mail_pass]) {
         if(self.mynewPass.length!=0&&self.mynewPassDone.length!=0){
             if ([self.mynewPassDone isEqualToString:self.mynewPass]) {
-                    NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/user/IF00038"];
-                    ASIFormDataRequest *request =  [ASIFormDataRequest  requestWithURL:url];
+                NSString* str=@"mac/user/IF00038";
+                NSString* strURL=globalURL(str);
+                NSURL* url=[NSURL URLWithString:strURL];
+                ASIFormDataRequest *request =  [ASIFormDataRequest  requestWithURL:url];
                     //[request setPostValue:[self.senderDic objectForKey:@"SENDER_ID"] forKey: @"user_id"];
                     NSLog(@"38接口用户uuid=======%@",self.userUUid);
                     NSLog(@"38接口用户新密码=======%@",self.mynewPass);

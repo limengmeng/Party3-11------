@@ -8,19 +8,18 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
-#import "SinaWeibo.h"
-#import "SinaWeiboRequest.h"
 #import "ASIHTTPRequest.h"
-//#import "JSONKit.h"
 #import "ASIFormDataRequest.h"
 #import "FriendViewView.h"
+#import "WeiboAccounts.h"
+#import "WeiboSignIn.h"
+#import "UserQuery.h"
 
-
-#define kAppKey             @"2629119497"
-#define kAppSecret          @"b940891aad16ae7627de8eaa7322e8c6"
-#define kAppRedirectURI     @"http://weibo.com/ch7e"
-@class login,resign,write_infor,write_done,takePhoto,SinaWeibo,FireView;
-@interface LogInViewController : UIViewController<UITextFieldDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,SinaWeiboDelegate,SinaWeiboRequestDelegate>{
+//#define kAppKey             @"2629119497"
+//#define kAppSecret          @"b940891aad16ae7627de8eaa7322e8c6"
+//#define kAppRedirectURI     @"http://weibo.com/ch7e"
+@class login,resign,write_infor,write_done,takePhoto,FireView;
+@interface LogInViewController : UIViewController<UITextFieldDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,WeiboSignInDelegate>{
     login *loginView;
     resign *resignView;
     write_done* infodoneView;
@@ -42,10 +41,9 @@
     NSString *user_sex;
     
     //====================
-    SinaWeibo *sinaWeibo;
-    SinaWeiboRequest *sinawoboRequest;
-    UILabel *currentAuthNameLabel;     //微博当前账号昵称
-    UIButton *changeWeiboUserButton;   //更改微博账号button
+    //更改微博账号button
+    WeiboSignIn *_weiboSignIn;
+    
     
     NSMutableArray *mutableArray;
     UITableView *tableviewFriend;
@@ -73,9 +71,6 @@
 @property (nonatomic,retain) NSString *user_sex;
 
 @property (nonatomic,retain) UIToolbar *dateToolbar;
-
-@property (nonatomic,retain) SinaWeibo *sinaweibo;
-
 @property (nonatomic,retain) login *loginView;;
 @property (nonatomic,retain) resign *resignView;
 @property (nonatomic,retain) write_done* infodoneView;

@@ -3,7 +3,7 @@
 //  PushNotificationDemo
 //
 //  Created by 罗 永亮 on 12-2-20.
-//  Copyright (c) 2012年 luoyl.info. All rights reserved.
+//  Copyright (c) 2012年 luoyl.info. All rights reserved.11
 //
 
 #import <Foundation/Foundation.h>

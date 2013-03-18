@@ -7,17 +7,26 @@
 //
 
 #import "CheckOneViewController.h"
-//#import "CreatPartyViewController.h"
 #import "infoViewController.h"
 #import "ASIHTTPRequest.h"
 #import "ASIFormDataRequest.h"
 #import "SDImageView+SDWebCache.h"
+#import "CreatPartyViewController.h"
+
 NSInteger prerow=-1;
 @interface CheckOneViewController ()
 
 @end
 
 @implementation CheckOneViewController
+@synthesize stateDictionary;
+@synthesize time;
+@synthesize type;
+@synthesize check_city;
+@synthesize check_local;
+@synthesize check_name;
+@synthesize check_time;
+
 @synthesize userUUid;
 @synthesize from_c_id;
 @synthesize from_p_id;
@@ -29,6 +38,8 @@ NSInteger prerow=-1;
 @synthesize lastIndexPath;
 //@synthesize Cell;
 @synthesize delegateFriend;
+@synthesize lng;
+@synthesize lat;
 
 
 -(void)viewWillAppear:(BOOL)animated
@@ -139,7 +150,8 @@ NSInteger prerow=-1;
 //从服务器获取好友数据
 -(void)loadFridetail{
     dataFlag=1;
-    NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/user/IF00009?uuid=%@",userUUid];
+    NSString* str=[NSString stringWithFormat:@"mac/user/IF00009?uuid=%@",userUUid];
+    NSString *stringUrl=globalURL(str);
     NSURL* url=[NSURL URLWithString:stringUrl];
     ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
     [request setDelegate:self];
@@ -150,7 +162,8 @@ NSInteger prerow=-1;
 
 -(void)loadPartydetail{
     dataFlag=2;
-    NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00007?uuid=%@&&c_id=%@",userUUid,self.from_c_id];
+    NSString* str=[NSString stringWithFormat:@"mac/party/IF00007?uuid=%@&&c_id=%@",userUUid,self.from_c_id];
+    NSString *stringUrl=globalURL(str);
     NSURL* url=[NSURL URLWithString:stringUrl];
     ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
     [request setDelegate:self];
@@ -264,60 +277,17 @@ NSInteger prerow=-1;
 {
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+   
+    
     if (cell==nil) {
         cell=[[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"]autorelease];
-        //*****************************头像**************************************
-        UIImageView* imgView=[[UIImageView alloc]initWithFrame:CGRectMake(9, 8, 39, 39)];
-       
-        imgView.tag=100;
-        [cell.contentView addSubview:imgView];
-        [imgView release];
-        //*****************************头像 end**************************************
-        
-        //*****************************性别***********************************
-        UIImageView* seximage=[[UIImageView alloc]initWithFrame:CGRectMake(58, 12, 11, 13)];
-        seximage.tag=101;
-        [cell.contentView addSubview:seximage];
-        [seximage release];
-        //*****************************性别 end***********************************
-        
-        //*****************************姓名***********************************
-        UILabel* namelabel=[[UILabel alloc]initWithFrame:CGRectMake(75, 9, 100, 20)];
-        namelabel.font=[UIFont systemFontOfSize:14];
-        namelabel.tag=102;
-        namelabel.textColor=[UIColor colorWithRed:96.0/255 green:95.0/255 blue:111.0/255 alpha:1];
-        namelabel.backgroundColor=[UIColor clearColor];
-        [cell.contentView addSubview:namelabel];
-        [namelabel release];
-        //*****************************姓名 end***********************************
-        
-        //*****************************年龄***********************************
-        UILabel* agelabel=[[UILabel alloc]initWithFrame:CGRectMake(75, 25 , 25, 30)];
-        agelabel.font=[UIFont systemFontOfSize:13];
-        agelabel.backgroundColor=[UIColor clearColor];
-        agelabel.textColor=[UIColor grayColor];
-        agelabel.tag=103;
-        [cell.contentView addSubview:agelabel];
-        [agelabel release];
-        //*****************************年龄 end***********************************
-        
-        //*****************************城市 地区***********************************
-        UILabel* citylabel=[[UILabel alloc]initWithFrame:CGRectMake(100, 25, 40, 30)];
-        citylabel.font=[UIFont systemFontOfSize:13];
-        citylabel.backgroundColor=[UIColor clearColor];
-        citylabel.textColor=[UIColor grayColor];
-        citylabel.tag=104;
-        UILabel* locallabel=[[UILabel alloc]initWithFrame:CGRectMake(140, 25, 40, 30)];
-        locallabel.font=[UIFont systemFontOfSize:13];
-        locallabel.backgroundColor=[UIColor clearColor];
-        locallabel.textColor=[UIColor grayColor];
-        locallabel.tag=105;
-        [cell.contentView addSubview:citylabel];
-        [cell.contentView addSubview:locallabel];
-        [citylabel release];
-        [locallabel release];
-        //*****************************城市 地区 end**********************************
     }
+    
+    for (UIView *views in cell.contentView.subviews)
+    {
+        [views removeFromSuperview];
+    }
+    
     NSUInteger row=[indexPath row];
     NSDictionary *dic=[NSDictionary dictionary];
     if(indexPath.section==0){
@@ -329,32 +299,66 @@ NSInteger prerow=-1;
         NSLog(@"玩伴列表=============%@",self.playList);
     }
     
-    UILabel* nameLabel=(UILabel *)[cell viewWithTag:102];
-    nameLabel.text=[dic objectForKey:@"USER_NICK"];
     
+//*****************************头像**************************************
+    UIImageView* imgView=[[UIImageView alloc]initWithFrame:CGRectMake(9, 8, 39, 39)];
     NSURL* imageurl=[NSURL URLWithString:[dic objectForKey:@"USER_PIC"]];
-    UIImageView *imgView=(UIImageView *)[cell viewWithTag:100];
     [imgView setImageWithURL: imageurl refreshCache:NO placeholderImage:[UIImage imageNamed:@"placeholderImage@2x.png"]];
+    [cell.contentView addSubview:imgView];
+    [imgView release];
+    //*****************************头像 end**************************************
     
-    UIImageView *seximage=(UIImageView *)[cell viewWithTag:101];
+    //*****************************性别***********************************
+    UIImageView* seximage=[[UIImageView alloc]initWithFrame:CGRectMake(58, 12, 11, 13)];
     if([[[dic objectForKey:@"USER_SEX"]substringToIndex:1] isEqualToString:@"M"])
         seximage.image=[UIImage imageNamed:@"PRmale1@2x.png"];
     else
         seximage.image=[UIImage imageNamed:@"PRfemale1@2x.png"];
+    [cell.contentView addSubview:seximage];
+    [seximage release];
+    //*****************************性别 end***********************************
     
-    UILabel *ageLabel=(UILabel *)[cell viewWithTag:103];
-    ageLabel.text=[NSString stringWithFormat:@"%@",[dic objectForKey:@"USER_AGE"]];
+    //*****************************姓名***********************************
+    UILabel* namelabel=[[UILabel alloc]initWithFrame:CGRectMake(75, 9, 100, 20)];
+    namelabel.font=[UIFont systemFontOfSize:14];
+    namelabel.text=[dic objectForKey:@"USER_NICK"];
+    namelabel.textColor=[UIColor colorWithRed:96.0/255 green:95.0/255 blue:111.0/255 alpha:1];
+    namelabel.backgroundColor=[UIColor clearColor];
+    [cell.contentView addSubview:namelabel];
+    [namelabel release];
+    //*****************************姓名 end***********************************
     
-    UILabel *cityLabel=(UILabel *)[cell viewWithTag:104];
+    //*****************************年龄***********************************
+    UILabel* agelabel=[[UILabel alloc]initWithFrame:CGRectMake(75, 25 , 25, 30)];
+    agelabel.font=[UIFont systemFontOfSize:13];
+    agelabel.backgroundColor=[UIColor clearColor];
+    agelabel.textColor=[UIColor grayColor];
+    agelabel.text=[NSString stringWithFormat:@"%@",[dic objectForKey:@"USER_AGE"]];
+    [cell.contentView addSubview:agelabel];
+    [agelabel release];
+    //*****************************年龄 end***********************************
+    
+    //*****************************城市 地区***********************************
+    UILabel* citylabel=[[UILabel alloc]initWithFrame:CGRectMake(100, 25, 40, 30)];
+    citylabel.font=[UIFont systemFontOfSize:13];
+    citylabel.backgroundColor=[UIColor clearColor];
+    citylabel.textColor=[UIColor grayColor];
     if (![[dic objectForKey:@"USER_CITY"] isEqualToString:@"(null)"]) {
-        cityLabel.text=[dic objectForKey:@"USER_CITY"];
+        citylabel.text=[dic objectForKey:@"USER_CITY"];
     }
     
-    UILabel *locabel=(UILabel *)[cell viewWithTag:105];
+    UILabel* locallabel=[[UILabel alloc]initWithFrame:CGRectMake(140, 25, 40, 30)];
+    locallabel.font=[UIFont systemFontOfSize:13];
+    locallabel.backgroundColor=[UIColor clearColor];
+    locallabel.textColor=[UIColor grayColor];
     if (![[dic objectForKey:@"USER_LOCAL"] isEqualToString:@"(null)"]) {
-        locabel.text=[dic objectForKey:@"USER_LOCAL"];
+        locallabel.text=[dic objectForKey:@"USER_LOCAL"];
     }
-
+    [cell.contentView addSubview:citylabel];
+    [cell.contentView addSubview:locallabel];
+    [citylabel release];
+    [locallabel release];
+    //*****************************城市 地区 end**********************************
     if (self.spot!=3) {
         UIImageView *imagView=[[UIImageView alloc]initWithFrame:CGRectMake(289,19,21,21)];
         imagView.image=[UIImage imageNamed:@"check1@2x.png"];
@@ -369,6 +373,7 @@ NSInteger prerow=-1;
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     UITableViewCell* newcell=[tableView cellForRowAtIndexPath:indexPath];
     UIButton* button = [UIButton buttonWithType:UIButtonTypeCustom];
     //******************************查看好友详细信息************************************
@@ -385,7 +390,7 @@ NSInteger prerow=-1;
     else{
         if(newcell.accessoryType==UITableViewCellAccessoryNone){
             if (temp<5) {
-                if(newcell.accessoryType=UITableViewCellAccessoryCheckmark){
+                if(newcell.accessoryType==UITableViewCellAccessoryCheckmark){
                     //************************添加对勾************************************
                     UIImage *image= [UIImage   imageNamed:@"checkcell@2x.png"];
                     CGRect frame = CGRectMake(0.0, 0.0, image.size.width, image.size.height);
@@ -393,7 +398,6 @@ NSInteger prerow=-1;
                     [button setBackgroundImage:image forState:UIControlStateNormal];
                     button.backgroundColor = [UIColor clearColor];
                     newcell.accessoryView=button;
-                    //[newcell.contentView addSubview:button];
                     //************************添加对勾 end************************************
                     if(indexPath.section==0)
                         [self.choiceFriends addObject:[self.list objectAtIndex:indexPath.row]];
@@ -418,13 +422,16 @@ NSInteger prerow=-1;
         }
         lastIndexPath=indexPath;
     }
+    
 }
 
 //******************************上传邀请好友信息************************************
 -(void)rightAction{
     
     if (self.from_p_id!=0) {
-        NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/party/IF00023"];
+        NSString* str=@"mac/party/IF00023";
+        NSString* strURL=globalURL(str);
+        NSURL* url=[NSURL URLWithString:strURL];
         for (int i=0; i<[self.choiceFriends count]; i++) {
             ASIFormDataRequest *request =  [ASIFormDataRequest  requestWithURL:url];
             [request setPostValue:self.userUUid forKey: @"uuid"];
@@ -434,8 +441,50 @@ NSInteger prerow=-1;
             [request startSynchronous];
         }
     }
-    [self.navigationController popViewControllerAnimated:YES];
+    
+
+    
     NSLog(@"self.choiceFriends=======%@",self.choiceFriends);
+    
+    NSLog(@"传值。。。。。。%@,%@",self.check_time,self.check_name);
+    
+    party=[[CreatPartyViewController alloc]init];
+    
+    party.from_P_type=self.type;
+    
+    party.P_title=self.check_name;
+    
+    party.P_time=self.check_time;
+    
+    party.map_city=self.check_city;
+    
+    party.map_local=self.check_local;
+    
+    party.friengArr=self.choiceFriends;
+    
+    party.lat=self.lat;
+    
+    party.lng=self.lng;
+    
+    party.time=self.time;
+    
+    NSLog(@"传值。。。。。====%@",self.time);
+    
+    NSLog(@"self.choiceFriends=======%@",party.friengArr);
+    
+    NSLog(@"传值。。。。。。%@,%@",party.P_title,party.P_time);
+    
+    [self.navigationController pushViewController:party animated:YES];
+    
+    NSLog(@"传值。。。。。====%@",party.time);
+
+    
+    NSLog(@"传值。。。。。。%@,%@",party.P_title,party.P_time);
+
+    NSLog(@"self.choiceFriends=======%@",party.friengArr);
+    
+    
+    
     if(self.spot==1){
         if (self.from_p_id==0)
             [delegateFriend CallBack:self.choiceFriends];
@@ -458,7 +507,9 @@ NSInteger prerow=-1;
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.spot==3) {
-        NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/user/IF00022"];
+        NSString* str=@"mac/user/IF00022";
+        NSString* strURL=globalURL(str);
+        NSURL* url=[NSURL URLWithString:strURL];
         ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
         [rrequest setPostValue:self.userUUid forKey:@"uuid"];
         [rrequest setPostValue:[[self.list objectAtIndex:indexPath.row] objectForKey:@"USER_ID"] forKey:@"user_id"];
@@ -480,6 +531,10 @@ NSInteger prerow=-1;
 
 -(void)dealloc{
     [super dealloc];
+    [party release];
+    [check_name release];
+    [check_time release];
+    self.stateDictionary=nil;
 }
 
 -(void)back

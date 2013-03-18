@@ -18,6 +18,7 @@
 
 @implementation CreatPartyViewController
 
+@synthesize friengArr;
 @synthesize lat,lng;
 @synthesize map_city,map_local;
 
@@ -58,14 +59,18 @@
 
 - (void)viewDidLoad
 {
+    
+    NSLog(@"self.choiceFriends=======%@",self.time);
+
     [super viewDidLoad];
     self.view.backgroundColor=[UIColor colorWithRed:250.0/255 green:250.0/255 blue:250.0/255 alpha:1];
-
-    friengArr =[[NSMutableArray alloc] initWithCapacity:10];
+    
+   // friengArr =[[NSMutableArray alloc] initWithCapacity:10];
 	// Do any additional setup after loading the view, typically from a nib.
+    
     P_info=[[NSString alloc]init];
-    P_title=[[NSString alloc]init];
-    P_time=[[NSString alloc]init];
+//    P_title=[[NSString alloc]init];
+//    P_time=[[NSString alloc]init];
     P_local=[[NSString alloc]init];
     
     //*******************************活动名称********************************
@@ -84,15 +89,14 @@
     activityName.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     activityName.backgroundColor=[UIColor clearColor];
     activityName.tag=100;
-    [activityName becomeFirstResponder];
+    activityName.text=self.P_title;
     activityName.font=[UIFont systemFontOfSize:14];
     activityName.delegate=self;
-    //activityName.backgroundColor = [UIColor clearColor];//这句话生效了
-    //activityName.background = [UIImage imageNamed:@"makeview1@2x.png"];
-    NSLog(@"%@",self.from_C_title);
-    if (![self.from_C_title isEqualToString:@"(null)"]) {
-        activityName.text=self.from_C_title;
-    }
+
+//    NSLog(@"%@",self.from_C_title);
+//    if (![self.from_C_title isEqualToString:@"(null)"]) {
+//        activityName.text=self.from_C_title;
+//    }
     //P_title=self.from_C_title;
     [self.view addSubview:activityName];
     
@@ -121,11 +125,9 @@
     activityPlace.font=[UIFont systemFontOfSize:14];
     activityPlace.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     activityPlace.tag=101;
-    //activityPlace.backgroundColor = [UIColor clearColor];//这句话生效了
-    //activityPlace.background = [UIImage imageNamed:@"makeview1@2x.png"];
+    activityPlace.text=[NSString stringWithFormat:@"%@%@",self.map_city,self.map_local];
+    activityPlace.userInteractionEnabled=NO;
     activityPlace.delegate=self;
-    //[activityPlace addTarget:self action:@selector(activityAction:) forControlEvents:UIControlEventEditingChanged];
-    
     [self.view addSubview:activityPlace];
     
     UILabel *labelPlace=[[UILabel alloc]initWithFrame:CGRectMake(20, 49, 80, 40)];
@@ -158,6 +160,7 @@
     [activityTime setFont:[UIFont fontWithName:@"Arial" size:12.0]];
     activityTime.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     activityTime.tag=102;
+    activityTime.text=self.P_time;
     activityTime.font=[UIFont systemFontOfSize:14];
     activityTime.textColor=[UIColor colorWithRed:99.0/255 green:99.0/255 blue:99.0/255 alpha:1];
     activityTime.delegate=self;
@@ -187,6 +190,7 @@
     creat.placeholder=@"最多可以选择4名好友与你共同创建";
     creat.font=[UIFont systemFontOfSize:12];
     creat.tag=103;
+    [self creatFriend];
     //creat.backgroundColor=[UIColor clearColor];
     creat.enabled=NO;
     creat.delegate=self;
@@ -195,7 +199,7 @@
     [self.view addSubview:creat];
     UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(10, 142, 300, 40)];
     button.backgroundColor=[UIColor clearColor];
-    [button addTarget:self action:@selector(buttonActive) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
     [button release];
     UILabel *labelCreat=[[UILabel alloc]initWithFrame:CGRectMake(20, 142, 80, 40)];
@@ -229,12 +233,16 @@
     introduce.delegate=self;
     introduce.backgroundColor = [UIColor clearColor];//这句话生效了
     [self.view addSubview:introduce];
+    
     //*******************************创建按钮*******************************
     //按钮操作
     btn =[[UIButton alloc]initWithFrame:CGRectMake(30, 320, (self.view.frame.size.width-60), 40)];
     [btn addTarget:self action:@selector(buttonAction) forControlEvents:UIControlEventTouchUpInside];
     btn.backgroundColor=[UIColor clearColor];
     [btn setBackgroundImage:[UIImage imageNamed:@"chuangjian@2x.png"] forState:UIControlStateNormal];
+    
+    [self.view addSubview:btn];
+
     //*******************************创建按钮 end*******************************
     
     //*******************************时间选择器*******************************
@@ -242,11 +250,8 @@
     // Birthday date picker
     if (self.DatePicker==nil) {
         DatePicker = [[UIDatePicker alloc] init];
-    [DatePicker setLocale: [[[NSLocale alloc] initWithLocaleIdentifier: @"zh_CN"] autorelease]];//设置时间选择器语言环境为中文
+        [DatePicker setLocale: [[[NSLocale alloc] initWithLocaleIdentifier: @"zh_CN"] autorelease]];//设置时间选择器语言环境为中文
 
-    //        //初始化时间
-        self.time = self.DatePicker.date;
-   
         [self.DatePicker addTarget:self action:@selector(DatePickerChanged:) forControlEvents:UIControlEventValueChanged];
         self.DatePicker.datePickerMode = UIDatePickerModeDateAndTime;
         self.DatePicker.minimumDate = [NSDate date];
@@ -287,6 +292,20 @@
     //*******************************隐藏键盘 end*******************************
 }
 
+-(void)creatFriend{
+    for (int i=0; i<[friengArr count]; i++) {
+        UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(0+40*i, 2, 35, 35)];
+        NSURL* imageurl=[NSURL URLWithString:[[friengArr objectAtIndex:i] objectForKey:@"USER_PIC"]];
+        [imageView setImageWithURL:imageurl];
+        [self.creat addSubview:imageView];
+        [imageView release];
+    }
+    
+    if ([friengArr count]!=0) {
+        creat.placeholder=@"";
+    }
+}
+
 //*******************************邀请函操作*******************************
 -(void)buttonAction{
     [introduce endEditing:YES];
@@ -320,6 +339,9 @@
     inviController.map_city=self.map_city;
     inviController.map_local=self.map_local;
     
+    NSLog(@"传值。。。。。====%@",self.time);
+
+    
     NSLog(@"self.lat==%f",self.lat);
     NSLog(@"self.lng==%f",self.lng);
     
@@ -333,13 +355,16 @@
 
 //********************************联合创建人方法*****************************
 -(void)buttonActive{
-    CheckOneViewController *friend=[[CheckOneViewController alloc]init];
-    friend.delegateFriend=self;
-    friend.title=@"邀请好友";
-    friend.spot=1;
-    friend.from_p_id=0;
-    [self.navigationController pushViewController:friend animated:YES];
-    [friend release];
+    
+    [self.navigationController popViewControllerAnimated:YES];
+    
+//    CheckOneViewController *friend=[[CheckOneViewController alloc]init];
+//    friend.delegateFriend=self;
+//    friend.title=@"邀请好友";
+//    friend.spot=1;
+//    friend.from_p_id=0;
+//    [self.navigationController pushViewController:friend animated:YES];
+//    [friend release];
 }
 //********************************联合创建人方法 end*****************************
 
@@ -405,23 +430,6 @@
     textField1.placeholder=@"";
     [self animateView:104];
 }
-////*******************************textField开始编辑*******************************
-//- (void)textFieldDidBeginEditing:(UITextField *)textField
-//{
-//    NSUInteger tag = [textField tag];
-//    NSLog(@"%d",tag);
-//    [self animateView:tag];
-//    if (tag==101) {
-//        MapViewController *creatCtr=[[MapViewController alloc]initWithNibName:@"MapViewController" bundle:nil];
-//        //[self.tabBarController.view addSubview:creatCtr.view];
-//        
-//        [self.navigationController pushViewController:creatCtr animated:YES];
-//        [creatCtr release];
-//        [textField resignFirstResponder];
-//        
-//    }
-//}
-////*******************************textField开始编辑 end*******************************
 
 -(void)mapAction{
     MapViewController *creatCtr=[[MapViewController alloc]init];
@@ -491,9 +499,8 @@
     
     if ([friengArr count]!=0) {
         creat.placeholder=@"";
-        [self.view addSubview:btn];
     }
-   }
+}
 //*******************************选择联合创建人后返回数据 end*******************************
 
 

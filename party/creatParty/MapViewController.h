@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 @class CustomAnnotation;
+@class CreatBeforeViewController;
 
 @protocol passValueDelegate
 -(void)passLat:(float)_lat andLng:(float)_lng;
@@ -25,7 +26,11 @@
     UILabel* label;
     NSMutableString* city;
     NSMutableString* local;
+    CreatBeforeViewController *creatbefore;
+    
+    NSString *type;
 }
+@property (strong,nonatomic) NSString *type;
 @property (strong,nonatomic) NSMutableString* city;
 @property (strong,nonatomic) NSMutableString* local;
 

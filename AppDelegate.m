@@ -88,11 +88,11 @@
     [[tbarController tabBar] setBackgroundImage:[UIImage imageNamed:@"dilan@2x.png"]];
     [[tbarController tabBar] selectionIndicatorImage];
     [self.window addSubview:tbarController.view];
-    [[tbarController tabBar] setSelectionIndicatorImage:[UIImage imageNamed:@"touming@2x.png"]];
+    //[[tbarController tabBar] setSelectionIndicatorImage:[UIImage imageNamed:@"touming@2x.png"]];
     [tbarController setSelectedIndex:1];
     
     
-    UIImage *selectedImage0 = [UIImage imageNamed:@"xiaoxi321@2x.png"];
+    UIImage *selectedImage0 = [UIImage imageNamed:@"004.png"];
     UIImage *unselectedImage0 = [UIImage imageNamed:@"xiaoxi123@2x.png"];
     
     UITabBar *tabBar0 = tbarController.tabBar;
@@ -103,12 +103,12 @@
     UITabBar *tabBar1 = tbarController.tabBar;
     UITabBarItem *item1 = [tabBar1.items objectAtIndex:1];
     [item1 setFinishedSelectedImage:selectedImage1 withFinishedUnselectedImage:unselectedImage1];
-    UIImage *selectedImage2 = [UIImage imageNamed:@"huodong123@2x.png"];
+    UIImage *selectedImage2 = [UIImage imageNamed:@"balloons.png"];
     UIImage *unselectedImage2 = [UIImage imageNamed:@"huodong321@2x.png"];
     UITabBar *tabBar2 = tbarController.tabBar;
     UITabBarItem *item2 = [tabBar2.items objectAtIndex:2];
     [item2 setFinishedSelectedImage:selectedImage2 withFinishedUnselectedImage:unselectedImage2];
-    UIImage *selectedImage3 = [UIImage imageNamed:@"shezhi321@2x.png"];
+    UIImage *selectedImage3 = [UIImage imageNamed:@"SETTING22222.png"];
     UIImage *unselectedImage3 = [UIImage imageNamed:@"shezhi123@2x.png"];
     UITabBar *tabBar3 = tbarController.tabBar;
     UITabBarItem *item3 = [tabBar3.items objectAtIndex:3];

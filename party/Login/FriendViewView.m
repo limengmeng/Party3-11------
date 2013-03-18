@@ -58,7 +58,9 @@
         [buttonCancel setBackgroundImage:[UIImage imageNamed:@"queding@2x.png"] forState:UIControlStateNormal];
         [self addSubview:self.buttonCancel];
         //===========获取系统给的数据=============================
-        NSURL *url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/user/IF00037"];
+        NSString* str=@"mac/user/IF00037";
+        NSString* strURL=globalURL(str);
+        NSURL *url=[NSURL URLWithString:strURL];
         ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
         [rrequest setPostValue:@"北京" forKey: @"city"];
         [rrequest setDelegate:self];
@@ -229,12 +231,13 @@
         NSLog(@"%@",dict);
         NSString* userid=[dict objectForKey:@"USER_ID"];
         NSLog(@"添加好友，接口12+++自己id:%@好友id:%@",self.userUUid,userid);
-        NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/user/IF00012"];
+        NSString* str=@"mac/user/IF00012";
+        NSString* strURL=globalURL(str);
+        NSURL* url=[NSURL URLWithString:strURL];
         ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
         [rrequest setPostValue:self.userUUid forKey: @"uuid"];
         [rrequest setPostValue:userid forKey:@"user_id"];
         [rrequest startSynchronous];
-        
     }
 }
 

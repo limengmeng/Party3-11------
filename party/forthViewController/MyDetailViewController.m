@@ -103,7 +103,8 @@ static int flag=0;//标志位，标志所选择的选择器是哪一个
     imageview.layer.shadowRadius = 2.0;
     picture=nil;
     mylist=[[NSArray alloc]initWithObjects:@"姓名 ",@"性别 ",@"年龄 ",@"地区 ", nil];
-    NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/user/IF00008?uuid=%@",userUUid];
+    NSString* str=[NSString stringWithFormat:@"mac/user/IF00008?uuid=%@",userUUid];
+    NSString *stringUrl=globalURL(str);
     NSURL* url=[NSURL URLWithString:stringUrl];
     
     ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
@@ -162,7 +163,9 @@ static int flag=0;//标志位，标志所选择的选择器是哪一个
         NSLog(@"%@",detail.text);
         
     
-        NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/servlet/Upload"];
+        NSString* str=@"servlet/Upload";
+        NSString* strURL=globalURL(str);
+        NSURL* url=[NSURL URLWithString:strURL];//注册和更新个人资料
         ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
         NSMutableString* sexstr=[[NSMutableString alloc]init];
         if ([sexfield.text isEqualToString:@"女"]) {
@@ -199,8 +202,10 @@ static int flag=0;//标志位，标志所选择的选择器是哪一个
         //只是更改了个人资料，图片未更改
         if (Changeinfo==1) {
             //调用接口：未定
-             NSLog(@"更新个人数据，不包括个人图片,需要上传接口未定");
-            NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/user/IF00066"];
+            NSLog(@"更新个人数据，不包括个人图片,需要上传接口未定");
+            NSString* str=@"mac/user/IF00066";
+            NSString* strURL=globalURL(str);
+            NSURL* url=[NSURL URLWithString:strURL];
             
             ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
             NSMutableString* sexstr=[[NSMutableString alloc]init];

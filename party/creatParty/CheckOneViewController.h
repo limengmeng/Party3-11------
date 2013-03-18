@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class ASIHTTPRequest;
+@class CreatPartyViewController;
 
 @protocol ContactCtrlDelegate
 
@@ -37,7 +38,34 @@
     
     int dataFlag;
     
+    CreatPartyViewController *party;
+    
+    NSString *check_name;
+    NSString *check_time;
+    NSString *check_city;
+    NSString *check_local;
+    
+    NSString *type;
+    float lat;
+    float lng;
+    
+    NSDate *time;
+    
+    NSMutableDictionary *stateDictionary;
 }
+
+@property (retain) NSMutableDictionary *stateDictionary;
+
+@property (nonatomic,retain) NSDate *time;
+@property  float lat;
+@property  float lng;
+@property (nonatomic,retain) NSString *type;
+@property (nonatomic,retain) NSString *check_name;
+@property (nonatomic,retain) NSString *check_time;
+@property (nonatomic,retain) NSString *check_city;
+@property (nonatomic,retain) NSString *check_local;
+
+
 @property (nonatomic,retain) NSString *userUUid;
 @property (nonatomic,retain) NSString *from_c_id;
 @property (nonatomic,retain) NSString *from_p_id;

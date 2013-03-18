@@ -107,7 +107,8 @@
     [acview release];
     [acview startAnimating];
     //接口IF00028
-    NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00028?uuid=%@&&from=1&&to=5",userUUid];
+    NSString* str=[NSString stringWithFormat:@"mac/party/IF00028?uuid=%@&&from=1&&to=5",userUUid];
+    NSString *stringUrl=globalURL(str);
     NSLog(@"获取活动列表,接口28:%@",stringUrl);
     NSURL* url=[NSURL URLWithString:stringUrl];
     
@@ -189,8 +190,8 @@
         segment=1;
         flag=0;
         [self.tableview reloadData];
-        
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00029?uuid=%@&&from=1&&to=5",userUUid];
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00029?uuid=%@&&from=1&&to=5",userUUid];
+        NSString *stringUrl=globalURL(str);
         NSLog(@"获取热门地点列表,接口29:%@",stringUrl);
         NSURL* url=[NSURL URLWithString:stringUrl];
         
@@ -208,7 +209,8 @@
         [self.tableview reloadData];
         flag=0;
         //接口IF00028
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00028?uuid=%@&&from=1&&to=5",userUUid];
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00028?uuid=%@&&from=1&&to=5",userUUid];
+        NSString *stringUrl=globalURL(str);
         NSLog(@"获取活动列表,接口28:%@",stringUrl);
         NSURL* url=[NSURL URLWithString:stringUrl];
         
@@ -581,7 +583,8 @@
     {
         int from=[self.actsumarray count]+1;
         int to=from+4;
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00028?uuid=%@&&from=%d&&to=%d",userUUid,from,to];
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00028?uuid=%@&&from=%d&&to=%d",userUUid,from,to];
+        NSString *stringUrl=globalURL(str);
         NSLog(@"获取活动列表,接口28:%@",stringUrl);
         NSLog(@"加载更多:");
         NSURL* url=[NSURL URLWithString:stringUrl];
@@ -607,7 +610,8 @@
     {
         int from=[self.actsumarray count]+1;
         int to=from+4;
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00029?uuid=%@&&from=%d&&to=%d",userUUid,from,to];
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00029?uuid=%@&&from=%d&&to=%d",userUUid,from,to];
+        NSString *stringUrl=globalURL(str);
         NSLog(@"获取地点列表,接口29:%@",stringUrl);
         NSLog(@"加载更多:");
         NSURL* url=[NSURL URLWithString:stringUrl];
@@ -668,7 +672,8 @@
     flag=0;
     //====================获取数据================================
     if (segment==1) {
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00029?uuid=%@&&from=1&&to=5",userUUid];
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00029?uuid=%@&&from=1&&to=5",userUUid];
+        NSString *stringUrl=globalURL(str);
         NSLog(@"接口29网址:::%@",stringUrl);
         NSURL* url=[NSURL URLWithString:stringUrl];
         
@@ -681,7 +686,8 @@
         [request startAsynchronous];
     }
     if (segment==0) {
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00028?uuid=%@&&from=1&&to=5",userUUid];
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00028?uuid=%@&&from=1&&to=5",userUUid];
+        NSString *stringUrl=globalURL(str);
         NSLog(@"获取活动列表,接口28:%@",stringUrl);
         NSURL* url=[NSURL URLWithString:stringUrl];
         

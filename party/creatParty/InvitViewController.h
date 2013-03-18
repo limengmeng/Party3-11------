@@ -42,6 +42,8 @@
     float lat;
     float lng;
     NSString *userUUid;
+    
+    int backSpot;
 }
 //地图传值用，已释放
 @property (strong,nonatomic) NSString * map_city,*map_local;

@@ -56,7 +56,8 @@
     self.view.backgroundColor=[UIColor colorWithRed:248.0/255 green:248.0/255 blue:248.0/255 alpha:1];
     [self getUUidForthis];
 
-    NSString *stringName=[[NSString alloc] initWithFormat:@"http://www.ycombo.com/che/mac/party/IF00006?uuid=%@&&c_id=%@",userUUid,stringNamePID];
+    NSString* str=[NSString stringWithFormat:@"mac/party/IF00006?uuid=%@&&c_id=%@",userUUid,stringNamePID];
+    NSString *stringName=globalURL(str);
     NSLog(@"活动中的party:接口6：网址:%@",stringName);
     NSURL* url=[NSURL URLWithString:stringName];
     ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
@@ -66,7 +67,6 @@
     [request setDefaultResponseEncoding:NSUTF8StringEncoding];
     [request setDidFailSelector:@selector(requestDidFailed:)];
     [request startAsynchronous];
-    [stringName release];
 
 	// Do any additional setup after loading the view.
     tableview=[[UITableView alloc]initWithFrame:mainscreen style:UITableViewStyleGrouped];
@@ -395,7 +395,8 @@
     else{
         //加载更多，所有
         flag++;
-        NSString *stringUrl=[[NSString alloc] initWithFormat:@"http://www.ycombo.com/che/mac/party/IF00006?uuid=%@&&c_id=%@&&from=%d",userUUid,stringNamePID,[self.sumArray count]];
+        NSString* str=[NSString stringWithFormat:@"mac/party/IF00006?uuid=%@&&c_id=%@&&from=%d",userUUid,stringNamePID,[self.sumArray count]];
+        NSString *stringUrl=globalURL(str);
         NSLog(@"接口6:%@",stringUrl);
         NSURL* url=[NSURL URLWithString:stringUrl];
         ASIHTTPRequest* request=[ASIHTTPRequest requestWithURL:url];
@@ -405,7 +406,6 @@
         [request setDefaultResponseEncoding:NSUTF8StringEncoding];
         [request setDidFailSelector:@selector(requestDidFailed:)];
         [request startAsynchronous];
-        [stringUrl release];
         
         
     }

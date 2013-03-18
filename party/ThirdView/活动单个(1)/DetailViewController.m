@@ -110,7 +110,8 @@ static NSString* P_type=@"activity";
     dict=[[NSMutableDictionary alloc]init];
     changePicview=[[UIImageView alloc]init];
 	// Do any additional setup after loading the view.
-    NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00004?uuid=%@&&c_id=%@",userUUid,self.C_id];
+    NSString* str=[NSString stringWithFormat:@"mac/party/IF00004?uuid=%@&&c_id=%@",userUUid,self.C_id];
+    NSString *stringUrl=globalURL(str);
     NSLog(@"活动信息网址%@",stringUrl);
     NSURL* url=[NSURL URLWithString:stringUrl];
     
@@ -209,14 +210,17 @@ static NSString* P_type=@"activity";
 {
     if (btn.tag==001) {
         NSLog(@"加入活动，需要上传,接口IF00026");
-        NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/party/IF00026"];
+        NSString* str=@"mac/party/IF00026";
+        NSString* strURL=globalURL(str);
+        NSURL* url=[NSURL URLWithString:strURL];
         ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
         [rrequest setPostValue:userUUid forKey: @"uuid"];
         [rrequest setPostValue:self.C_id forKey:@"c_id"];
         [rrequest startSynchronous];
         btn.tag=002;
         [btn setImage:[UIImage imageNamed:@"quit@2x.png"] forState:UIControlStateNormal];
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00004?uuid=%@&&c_id=%@",userUUid,self.C_id];
+        str=[NSString stringWithFormat:@"mac/party/IF00004?uuid=%@&&c_id=%@",userUUid,self.C_id];
+        NSString *stringUrl=globalURL(str);
         NSLog(@"活动信息网址%@",stringUrl);
         NSURL* reurl=[NSURL URLWithString:stringUrl];
         
@@ -230,7 +234,9 @@ static NSString* P_type=@"activity";
     }
     else
     {   NSLog(@"退出已加入的活动，需要上传数据，接口IF00027");
-        NSString* url27=@"http://www.ycombo.com/che/mac/party/IF00027";
+        NSString* str=@"mac/party/IF00027";
+       
+        NSString* url27=globalURL(str);
         NSURL* url=[NSURL URLWithString:url27];
         ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
         [rrequest setPostValue:userUUid forKey: @"uuid"];
@@ -238,7 +244,8 @@ static NSString* P_type=@"activity";
         [rrequest startSynchronous];
         btn.tag=001;
         [btn setImage:[UIImage imageNamed:@"join@2x.png"] forState:UIControlStateNormal];
-        NSString *stringUrl=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/party/IF00004?uuid=%@&&c_id=%@",userUUid,self.C_id];
+        str=[NSString stringWithFormat:@"mac/party/IF00004?uuid=%@&&c_id=%@",userUUid,self.C_id];
+        NSString *stringUrl=globalURL(str);
         NSLog(@"活动信息网址%@",stringUrl);
         NSURL* reurl=[NSURL URLWithString:stringUrl];
         

@@ -64,7 +64,8 @@
     tableview.backgroundView=nil;
     tableview.backgroundColor=[UIColor colorWithRed:248.0/255 green:248.0/255 blue:248.0/255 alpha:1];
     [self.view addSubview:tableview];
-    NSString* urlstr=[NSString stringWithFormat:@"http://www.ycombo.com/che/mac/user/IF00003?uuid=%@&&user_id=%@",self.userUUid,self.user_id];
+    NSString* str=[NSString stringWithFormat:@"mac/user/IF00003?uuid=%@&&user_id=%@",self.userUUid,self.user_id];
+    NSString* urlstr=globalURL(str);
     NSLog(@"请求接口的网址:%@",urlstr);
     
     NSURL* url=[NSURL URLWithString:urlstr];
@@ -263,7 +264,9 @@
     {
         NSLog(@"确认");
         NSLog(@"确认添加好友,需要确认添加好友的接口13:::");
-        NSURL* url=[NSURL URLWithString:@"http://www.ycombo.com/che/mac/user/IF00013"];        
+        NSString* str=@"mac/user/IF00013";
+        NSString* strURL=globalURL(str);
+        NSURL* url=[NSURL URLWithString:strURL];
         ASIFormDataRequest *rrequest =  [ASIFormDataRequest  requestWithURL:url];
         NSLog(@"确认添加好友：接口13：：：：%@,%@",self.userUUid,user_id);
         [rrequest setPostValue:self.userUUid forKey: @"uuid"];

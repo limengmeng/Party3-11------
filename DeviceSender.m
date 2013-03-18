@@ -6,7 +6,6 @@
 //  Copyright (c) 2012年 luoyl.info. All rights reserved.
 //
 
-#define push_server		@"http://www.ycombo.com/che/mac/msg/IF00062"
 #import "DeviceSender.h"
 
 @interface DeviceSender()
@@ -43,6 +42,8 @@
         
         NSString *tokenString=[deviceToken substringWithRange:range];
         NSLog(@"tokenString=======%@",tokenString);
+        NSString* str=@"mac/msg/IF00062";
+        NSString* push_server=globalURL(str);
         NSString *urlString = [NSString stringWithFormat:@"%@?token=%@&uuid=%@", push_server, tokenString, userUUid];
         NSLog(@"---->发送设备id到：%@", urlString);
         NSStringEncoding enc = CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000);
